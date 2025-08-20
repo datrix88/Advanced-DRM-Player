@@ -1,0 +1,64 @@
+#settingsModalLabel .icon-placeholder::before, #settingsModal .settings-group-title .icon-placeholder::before, #settingsModal .nav-link .icon-placeholder::before { content: ""; margin-right: 0.5rem; font-family: sans-serif; font-size: 0.9em; opacity: 0.8; display: inline-block; width: 1.2em; text-align: center; }
+#settingsModalLabel .icon-placeholder::before { content: "\2699"; }
+#generalUISettingsTab .icon-placeholder::before { content: "\1F3A8"; } 
+#shakaPlayerSettingsTab .icon-placeholder::before { content: "\1F3A5"; }
+#shakaNetworkSettingsTab .icon-placeholder::before { content: "\1F4E1"; }
+#epgSettingsTab .icon-placeholder::before { content: "\1F4C5"; }
+#xcodecSettingsTab .icon-placeholder::before { content: "⚙️"; font-style: normal; }
+#barTvSettingsTab .icon-placeholder::before { content: "🍺"; font-style: normal; }
+#orangeTvSettingsTab .icon-placeholder::before { content: "🍊"; font-style: normal; }
+#globalNetworkSettingsTab .icon-placeholder::before { content: "\1F310"; }
+#daznSettingsTab .icon-placeholder::before { content: "📺"; }
+#movistarSettingsTab .icon-placeholder::before { content: "Ⓜ️"; font-style: normal;}
+#appDataManagementTab .icon-placeholder::before { content: "\1F4BE"; }
+#sendM3uToServerTab .icon-placeholder::before { content: "📡"; }
+#settingsModal .form-check-input { background-color: var(--bg-element); border-color: var(--border-color-strong); }
+#settingsModal .form-check-input:checked { background-color: var(--accent-primary); border-color: var(--accent-secondary); }
+#settingsModal .form-check-input:focus { box-shadow: 0 0 0 0.25rem var(--accent-primary-transparent); }
+#settingsModal .form-check-label { margin-left: 0.5em; font-size: 0.9rem; }
+.form-switch .form-check-input {  width: 2.2em;  height: 1.2em;  margin-top: 0.2em; }
+#settingsModal .form-range { height: 1.3rem; padding: 0; }
+#settingsModal .form-range:focus {  box-shadow: none; }
+#settingsModal .form-range::-webkit-slider-thumb { width: 1.3rem; height: 1.3rem; margin-top: -0.4rem; background-color: var(--accent-primary); border-radius: 50%;  border: none; transition: background-color 0.15s ease-in-out; }
+#settingsModal .form-range::-webkit-slider-thumb:hover { background-color: var(--accent-hover); }
+#settingsModal .form-range::-moz-range-thumb { width: 1.3rem; height: 1.3rem; background-color: var(--accent-primary); border-radius: 50%; border: none; transition: background-color 0.15s ease-in-out; }
+#settingsModal .form-range::-moz-range-thumb:hover { background-color: var(--accent-hover); }
+#settingsModal .settings-group-title { font-family: var(--font-heading); color: var(--accent-primary); border-bottom: 1px solid var(--border-color); padding-bottom: 0.5rem; margin-bottom: 1rem; margin-top: 1.5rem;  }
+#settingsModal .tab-pane > .settings-group-title:first-of-type { margin-top: 0; }
+#settingsModal .modal-dialog { max-width: 1100px; }
+#settingsModal .nav-pills .nav-link { color: var(--text-secondary); border-radius: var(--radius-md); margin-bottom: 0.25rem; text-align: left; padding: 0.6rem 1rem; }
+#settingsModal .nav-pills .nav-link:hover { background-color: var(--bg-element-hover); color: var(--text-primary); }
+#settingsModal .nav-pills .nav-link.active { background-color: var(--accent-primary); color: white; font-weight: 600; }
+#settingsModal .tab-content { padding-left: 1.5rem; border-left: 1px solid var(--border-color); height: 100%;  }
+#movistarLongTokensTableBodySettings td, #movistarLongTokensTableBodySettings th {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.75rem !important; 
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+#movistarLongTokensTableBodySettings td:first-child, #movistarLongTokensTableBodySettings th:first-child { max-width: 120px; } 
+#movistarLongTokensTableBodySettings td:nth-child(2), #movistarLongTokensTableBodySettings th:nth-child(2) { max-width: 100px; } 
+#movistarLongTokensTableBodySettings td:nth-child(3), #movistarLongTokensTableBodySettings th:nth-child(3) { max-width: 80px; }  
+#movistarLongTokensTableBodySettings td:nth-child(4), #movistarLongTokensTableBodySettings th:nth-child(4) { max-width: 130px; } 
+#movistarLongTokensTableBodySettings td:nth-child(5), #movistarLongTokensTableBodySettings th:nth-child(5) { max-width: 100px; text-align: center;} 
+#movistarLongTokensTableBodySettings td:last-child, #movistarLongTokensTableBodySettings th:last-child { width: 90px; text-align: center;} 
+#movistarDevicesListForSettings .list-group-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem !important; 
+}
+#movistarDevicesListForSettings .form-check-label { font-size: inherit !important; }
+#orangeTvGroupSelectionContainer .form-check {
+    min-width: 150px; 
+    flex-basis: auto;
+}
+#generatedPhpCode {
+    font-family: var(--font-monospace);
+    background-color: var(--bg-primary);
+    color: #cdd3de;
+    border-color: var(--border-color-strong);
+    font-size: 0.8rem;
+    white-space: pre;
+    word-wrap: normal;
+    overflow-x: auto;
+}

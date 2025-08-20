@@ -1,0 +1,1302 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title data-lang-key="pageTitle">DRM player | Player Avanzado</title>
+    <link href="libs/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="libs/controls.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/header.css">
+    <link rel="stylesheet" href="css/channel_grid.css">
+    <link rel="stylesheet" href="css/channel_card.css">
+    <link rel="stylesheet" href="css/modals_general.css">
+    <link rel="stylesheet" href="css/player_modal.css">
+    <link rel="stylesheet" href="css/epg_modal.css">
+    <link rel="stylesheet" href="css/movistar_vod_modal.css">
+    <link rel="stylesheet" href="css/settings_modal.css">
+    <link rel="stylesheet" href="css/xtream_modal.css">
+    <link rel="stylesheet" href="css/generic_modals.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/editor.css">
+    <link rel="stylesheet" href="css/eq_panel.css">
+
+</head>
+<body id="appBody">
+    <div id="particles-js"></div>
+    <div id="app-container">
+        <aside id="sidebar">
+            <div class="sidebar-header"> <a class="sidebar-logo" href="#" data-lang-key="appName">DRM Player</a> </div>
+            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="filterGroupsLabel">Filtrar Grupos</h6>
+            <select class="form-select form-select-sm group-filter mb-3" id="groupFilterSidebar">
+                <option value="" data-lang-key="allGroupsOption">📂 Todos los grupos</option>
+            </select>
+            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="groupsLabel">Grupos</h6>
+            <ul class="list-group group-list-sidebar" id="sidebarGroupList">
+                <li class="list-group-item active" data-group-name="" data-lang-key="allGroupsListItem">Todos los Grupos</li>
+            </ul>
+        </aside>
+        <div id="main-content-wrapper">
+            <header id="top-header">
+                <button class="sidebar-toggle-btn" id="sidebarToggleBtn" title="Toggle Sidebar"> </button>
+                <div class="header-search-bar">
+                    <input type="text" class="header-search-input" id="searchInput" placeholder="Buscar canales..." data-lang-key="searchPlaceholder" data-lang-attr="placeholder">
+                    <span class="header-search-icon"></span>
+                </div>
+                <div class="header-actions">
+                    <button class="btn-header-action" id="movistarTokenStatusBtn" title="Estado y actualización del token de Movistar+" style="display: none;">
+                        <span class="icon-placeholder" style="font-style: normal;">Ⓜ️</span>
+                        <span class="btn-text" id="movistarTokenStatusText">Movistar</span>
+                    </button>
+                    <button class="btn-header-action" id="openEditorBtn" title="Editor Avanzado">
+                        <span class="icon-placeholder" style="font-family: FontAwesome;"></span><span class="btn-text" data-lang-key="advancedEditorButton">Editor</span>
+                    </button>
+                    <div class="dropdown">
+                        <button class="btn-header-action dropdown-toggle" type="button" id="providersDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Proveedores de Contenido">
+                            <span class="icon-placeholder" style="font-family: sans-serif;">📡</span>
+                            <span class="btn-text" data-lang-key="providersButton">Proveedores</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="providersDropdown">
+                            <li><button class="dropdown-item" id="loadAtresplayerBtnHeader" type="button"><span class="icon-placeholder me-2" style="font-family: initial; font-weight:bold;">A</span>Atresplayer</button></li>
+                            <li><button class="dropdown-item" id="openMovistarVODModalBtn" type="button"><span class="icon-placeholder me-2" style="font-style: normal;">Ⓜ️</span>Movistar VOD</button></li>
+                            <li><button class="dropdown-item" id="loadOrangeTvBtnHeader" type="button"><span class="icon-placeholder me-2" style="font-style: normal;">🍊</span>OrangeTV</button></li>
+                            <li><button class="dropdown-item" id="updateDaznBtn" type="button"><span class="icon-placeholder me-2" style="font-style: normal;">📺</span>DAZN</button></li>
+                            <li><button class="dropdown-item" id="loadBarTvBtnHeader" type="button"><span class="icon-placeholder me-2" style="font-style: normal;">🍺</span>BarTV</button></li>
+                        </ul>
+                    </div>
+                    <button class="btn-header-action" id="openXtreamModalBtn" title="Conectar a Xtream">
+                        <span class="icon-placeholder"></span><span class="btn-text">Xtream</span>
+                    </button>
+                     <button class="btn-header-action" id="openManageXCodecPanelsModalBtn" title="Abrir Panel XCodec">
+                        <span class="icon-placeholder" style="font-style:normal;">⚙️</span><span class="btn-text">XCodec</span>
+                    </button>
+                    <div class="dropdown">
+                         <button class="btn-header-action dropdown-toggle" type="button" id="listManagementDropdown" data-bs-toggle="dropdown" aria-expanded="false" title="Gestión de Listas">
+                            <span class="icon-placeholder" style="font-family: sans-serif;">📂</span><span class="btn-text" data-lang-key="listManagementButton">Listas</span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-dark dropdown-menu-end" aria-labelledby="listManagementDropdown">
+                            <li><button class="dropdown-item" id="loadFromDBBtnHeader" type="button"><span class="icon-placeholder me-2">💾</span><span data-lang-key="loadListsButton">Cargar Listas</span></button></li>
+                            <li><button class="dropdown-item" id="saveToDBBtnHeader" type="button"><span class="icon-placeholder me-2">🗳️</span><span data-lang-key="saveListsButton">Guardar Listas</span></button></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><button class="dropdown-item" id="downloadM3UBtnHeader" type="button"><span class="icon-placeholder me-2">📥</span><span data-lang-key="downloadM3UButton">Descargar M3U</span></button></li>
+                        </ul>
+                    </div>
+                    <button class="btn-header-action" id="openEpgModalBtn" title="Abrir EPG">
+                        <span class="icon-placeholder"></span><span class="btn-text" data-lang-key="epgButton">EPG</span>
+                    </button>
+                    <button class="btn-header-action" id="openSettingsModalBtn" title="Ajustes">
+                        <span class="icon-placeholder"></span><span class="btn-text" data-lang-key="settingsButton">Ajustes</span>
+                    </button>
+                </div>
+            </header>
+            <div id="xtream-info-bar" class="xtream-info-bar" style="display: none;"></div>
+            <main id="main-content">
+                <div class="m3u-load-area">
+                    <div class="row g-3 align-items-center">
+                        <div class="col-lg-6 col-md-12">
+                            <label for="urlInput" class="form-label visually-hidden">URL de lista M3U</label>
+                            <input type="text" class="form-control" id="urlInput" placeholder="📡 URL de lista M3U o Xtream API">
+                        </div>
+                        <div class="col-lg-2 col-md-6 d-grid"> <button class="btn-control primary" id="loadUrl" data-lang-key="loadUrlButton">Cargar URL</button> </div>
+                        <div class="col-lg-4 col-md-6">
+                            <label for="fileInput" class="form-label visually-hidden">Seleccionar archivo M3U local</label>
+                            <input type="file" class="form-control" id="fileInput" accept=".m3u,.m3u8" title="Seleccionar archivo M3U local" data-lang-key="loadFileInputTitle" data-lang-attr="title">
+                        </div>
+                    </div>
+                </div>
+                <div class="filter-tabs-container">
+                    <button class="filter-tab-btn active" id="showAllChannels" title="Mostrar Todos"> <span class="icon-placeholder"></span> <span data-lang-key="allChannelsTab">Todos</span> </button>
+                    <button class="filter-tab-btn" id="showFavorites" title="Mostrar Favoritos"> <span class="icon-placeholder"></span> <span data-lang-key="favoritesTab">Favoritos</span> </button>
+                    <button class="filter-tab-btn" id="showHistory" title="Mostrar Historial"> <span class="icon-placeholder"></span> <span data-lang-key="historyTab">Historial</span> </button>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <button id="xtreamBackButton" class="btn-control btn-sm me-3" style="display: none;"><i class="fas fa-arrow-left"></i> <span data-lang-key="backButton">Volver</span></button>
+                    <h2 class="section-title-main flex-grow-1" id="channelGridTitle" style="margin-bottom:0 !important;" data-lang-key="availableChannelsTitle">Canales Disponibles</h2>
+                </div>
+                <div id="channelGrid" class="m3u-grid"> </div>
+                <p class="text-center text-secondary w-100" id="noChannelsMessage" style="display: none;"></p>
+                <div class="pagination-controls" id="paginationControls" style="display: none;">
+                    <button id="prevPage" class="btn-control"><span class="icon-placeholder"></span> <span data-lang-key="paginationPrev">Ant.</span></button>
+                    <span id="pageInfo">Página 1 de 1</span>
+                    <button id="nextPage" class="btn-control"><span data-lang-key="paginationNext">Sig.</span> <span class="icon-placeholder"></span></button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <div id="player-windows-container"></div>
+    <div id="player-taskbar"></div>
+    
+    <template id="playerWindowTemplate">
+        <div class="player-window">
+            <div class="modal-header modal-header-draggable">
+                <h5 class="modal-title player-window-title" data-lang-key="playerTitle">Reproductor</h5>
+                <div class="player-window-controls">
+                    <button type="button" class="btn-window-control player-window-minimize-btn" aria-label="Minimize" title="Minimizar" data-lang-key="minimizeButton" data-lang-attr="title"></button>
+                    <button type="button" class="btn-window-control player-window-close-btn" aria-label="Close" title="Cerrar" data-lang-key="closeButton" data-lang-attr="title"></button>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="player-container" data-shaka-player-container>
+                    <video class="player-video" data-shaka-player playsinline x-webkit-airplay="allow" crossorigin="anonymous" poster="" autoplay></video>
+                    <div class="player-infobar">
+                        <img class="infobar-logo" src="" alt="Logo Canal">
+                        <div class="infobar-details">
+                            <h3 class="infobar-channel-name"></h3>
+                            <div class="infobar-epg-current"></div>
+                            <div class="infobar-epg-next"></div>
+                            <div class="infobar-epg-progress-container">
+                                <div class="infobar-epg-progress"></div>
+                            </div>
+                        </div>
+                        <div class="infobar-time"></div>
+                    </div>
+                    <div class="player-channel-list-panel">
+                        <div class="player-channel-list-header" data-lang-key="channelListTitle">Lista de Canales</div>
+                        <div class="player-channel-list-content">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="resize-handle"></div>
+        </div>
+    </template>
+    
+    <template id="eqPanelTemplate">
+        <div class="eq-panel">
+            <div class="eq-header">
+                <strong data-lang-key="eqTitle">Ecualizador de Audio</strong>
+                <label class="switch">
+                    <input type="checkbox" class="eq-on-off">
+                    <span class="eq-slider-toggle"></span>
+                </label>
+            </div>
+            <div class="eq-band-container">
+            </div>
+            <div class="eq-controls-container">
+                <div class="eq-static-presets">
+                    <button class="btn-control btn-sm eq-reset-btn" data-lang-key="eqFlatPreset">Plano</button>
+                    <button class="btn-control btn-sm" data-preset="dialogue" data-lang-key="eqDialoguePreset">Diálogo</button>
+                    <button class="btn-control btn-sm" data-preset="movie" data-lang-key="eqMoviePreset">Cine</button>
+                    <button class="btn-control btn-sm" data-preset="night" data-lang-key="eqNightPreset">Noche</button>
+                </div>
+                <div class="eq-custom-presets">
+                    <select class="form-select eq-custom-preset-select">
+                        <option value="" data-lang-key="eqCustomPresetPlaceholder">-- Presets Guardados --</option>
+                    </select>
+                    <button class="btn-control btn-sm eq-save-preset-btn" title="Guardar preset actual"><i class="fas fa-save"></i></button>
+                    <button class="btn-control btn-sm btn-danger eq-delete-preset-btn" title="Eliminar preset seleccionado"><i class="fas fa-trash"></i></button>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <div class="modal fade" id="editorModal" tabindex="-1" aria-labelledby="editorModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editorModalLabel" data-lang-key="advancedEditorTitle"><i class="fas fa-pencil-alt me-2"></i>Editor Avanzado M3U</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="content-wrapper">
+                        <div class="list-panel">
+                            <div class="list-toolbar">
+                                <span id="file-name-display" data-lang-key="noFileLoaded">Ningún archivo cargado</span>
+                                <input type="text" class="form-control form-control-sm" id="editor-search-input" placeholder="Buscar en la lista..." style="width: 200px; margin-left: 1rem;" data-lang-key="searchInListPlaceholder" data-lang-attr="placeholder">
+                                <select id="editor-group-filter" class="form-control-sm ms-auto">
+                                    <option value="" data-lang-key="allGroups">Todos los Grupos</option>
+                                </select>
+                                <button class="btn btn-sm btn-outline-danger" id="delete-selected-btn" disabled><i class="fas fa-trash"></i> <span data-lang-key="deleteSelected">Eliminar Sel.</span></button>
+                                <button class="btn btn-sm" id="clear-selection-btn"><i class="fas fa-eraser"></i> <span data-lang-key="clearSelection">Limpiar Sel.</span></button>
+                                <button class="btn btn-sm btn-outline-primary" id="multi-edit-btn" disabled><i class="fas fa-edit"></i> <span data-lang-key="multiEdit">Multi-Editar</span></button>
+                            </div>
+                            <div class="table-container" id="editor-table-container">
+                                <table id="editor-channels-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="checkbox-cell"><input type="checkbox" id="editor-select-all" aria-label="Seleccionar todo"></th>
+                                            <th class="handle-cell"><i class="fas fa-grip-lines"></i></th>
+                                            <th class="logo-cell" data-lang-key="logoHeader">Logo</th>
+                                            <th class="name-cell sortable" data-sort="name"><span data-lang-key="nameHeader">Nombre</span> <i class="fas fa-sort"></i></th>
+                                            <th class="url-cell" data-lang-key="urlHeader">URL</th>
+                                            <th class="epg-cell sortable" data-sort="tvg-id"><span data-lang-key="epgIdHeader">EPG ID</span> <i class="fas fa-sort"></i></th>
+                                            <th class="ch-num-cell sortable" data-sort="ch-number"><span data-lang-key="channelNumHeader">Num</span> <i class="fas fa-sort"></i></th>
+                                            <th class="actions-cell" data-lang-key="actionsHeader">Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="editor-table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        <div class="editor-panel" id="editor-panel">
+                            <div id="editor-placeholder">
+                                <i class="fas fa-edit"></i>
+                                <p data-lang-key="editorPlaceholder">Selecciona un canal para editar sus detalles.</p>
+                            </div>
+                            <div id="editor-form-content" class="hidden">
+                                <div class="editor-panel-header">
+                                    <h3 data-lang-key="channelEditorTitle"><i class="fas fa-pencil-alt"></i> Editor de Canal</h3>
+                                    <button class="btn-close-editor" id="close-editor-btn" title="Cerrar Editor">×</button>
+                                </div>
+                                <div class="editor-panel-content">
+                                    <img id="editor-logo-preview" src="" alt="Vista previa del logo" class="editor-logo-preview" data-lang-key="logoPreviewAlt" data-lang-attr="alt">
+                                    <div class="form-group"><label for="editor-channel-name" data-lang-key="channelNameLabel">Nombre del Canal</label><input type="text" id="editor-channel-name" required></div>
+                                    <div class="input-group">
+                                        <div class="form-group"><label for="editor-channel-tvg-id" data-lang-key="epgIdLabel">EPG ID (tvg-id)</label><input type="text" id="editor-channel-tvg-id"></div>
+                                        <div class="form-group ch-num-wrapper"><label for="editor-channel-ch-num" data-lang-key="channelNumLabel">Núm. Canal (ch-number)</label><input type="number" id="editor-channel-ch-num" min="-1"></div>
+                                    </div>
+                                    <div class="form-group"><label for="editor-channel-logo" data-lang-key="logoLabel">Logo (tvg-logo)</label><input type="url" id="editor-channel-logo"></div>
+                                    <div class="form-group"><label for="editor-channel-url" data-lang-key="streamUrlLabel">URL del Stream</label><input type="url" id="editor-channel-url" required></div>
+                                    <div class="form-group"><label for="editor-channel-group" data-lang-key="groupLabel">Grupo (group-title)</label><input type="text" id="editor-channel-group" list="group-suggestions"></div>
+                                    <datalist id="group-suggestions"></datalist>
+                                    <div class="form-check-group">
+                                        <div class="form-check"><input type="checkbox" id="editor-fav-channel"><label for="editor-fav-channel" data-lang-key="favoriteLabel">Favorito</label></div>
+                                        <div class="form-check"><input type="checkbox" id="editor-hide-channel"><label for="editor-hide-channel" data-lang-key="hideChannelLabel">Ocultar canal</label></div>
+                                    </div>
+                                    <h6 data-lang-key="advancedSettingsDRM">Ajustes Avanzados / DRM</h6>
+                                    <div class="form-group"><label for="editor-kodi-license-type" data-lang-key="licenseTypeLabel">Tipo Licencia DRM (license_type)</label><input type="text" id="editor-kodi-license-type"></div>
+                                    <div class="form-group"><label for="editor-kodi-license-key" data-lang-key="licenseKeyLabel">Clave/URL Licencia DRM (license_key)</label><textarea id="editor-kodi-license-key" rows="2"></textarea></div>
+                                    <div class="form-group"><label for="editor-kodi-stream-headers" data-lang-key="streamHeadersLabel">Cabeceras Stream DRM (stream_headers)</label><textarea id="editor-kodi-stream-headers" rows="2" placeholder="Ej: User-Agent=XYZ&Referer=abc.com"></textarea></div>
+                                    <div class="form-group"><label for="editor-vlc-user-agent" data-lang-key="vlcUserAgentLabel">VLC User-Agent (#EXTVLCOPT:http-user-agent)</label><textarea id="editor-vlc-user-agent" rows="2"></textarea></div>
+                                </div>
+                                <div class="editor-panel-footer">
+                                    <button class="btn btn-sm btn-info" id="editor-play-btn" title="Probar Canal"><i class="fas fa-play"></i> <span data-lang-key="testButton">Probar</span></button>
+                                    <button class="btn btn-sm btn-outline-danger" id="editor-delete-btn" title="Eliminar Canal"><i class="fas fa-trash"></i> <span data-lang-key="deleteButton">Eliminar</span></button>
+                                    <button class="btn btn-sm btn-success" id="editor-save-btn" title="Guardar Cambios del Canal"><i class="fas fa-save"></i> <span data-lang-key="saveButton">Guardar</span></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="closeEditorButton">Cerrar Editor</button>
+		            <button type="button" class="btn-control primary" id="applyEditorChangesBtn"><i class="fas fa-check-circle me-1"></i><span data-lang-key="applyChangesAndCloseButton">Aplicar Cambios y Cerrar</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="multiEditModal" tabindex="-1" aria-labelledby="multiEditModalLabel" aria-hidden="true" data-bs-backdrop="static">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="multiEditModalLabel" data-lang-key="multiEditTitle"><i class="fas fa-edit"></i> Edición Múltiple de Canales</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-secondary">Aplica cambios a todos los <strong id="multiEditChannelCount">0</strong> canales seleccionados.</p>
+                    
+                    <div class="multi-edit-field">
+                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="multiEditEnableGroup"><label for="multiEditEnableGroup" data-lang-key="changeGroupLabel">Cambiar Grupo</label></div>
+                        <input type="text" class="form-control form-control-sm" id="multiEditGroupInput" placeholder="Nuevo nombre de grupo..." disabled list="group-suggestions" data-lang-key="newGroupNamePlaceholder" data-lang-attr="placeholder">
+                    </div>
+                    
+                    <div class="multi-edit-field">
+                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="multiEditEnableFavorite"><label for="multiEditEnableFavorite" data-lang-key="modifyFavoriteLabel">Modificar Favorito</label></div>
+                        <select id="multiEditFavoriteSelect" class="form-select form-select-sm" disabled><option value="add" data-lang-key="addToFavoritesOption">Añadir a Favoritos</option><option value="remove" data-lang-key="removeFromFavoritesOption">Quitar de Favoritos</option></select>
+                    </div>
+
+                    <div class="multi-edit-field">
+                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="multiEditEnableHidden"><label for="multiEditEnableHidden" data-lang-key="modifyVisibilityLabel">Modificar Visibilidad</label></div>
+                        <select id="multiEditHiddenSelect" class="form-select form-select-sm" disabled><option value="hide" data-lang-key="hideChannelsOption">Ocultar Canales</option><option value="show" data-lang-key="showChannelsOption">Mostrar Canales</option></select>
+                    </div>
+
+                    <h6 class="mt-4" data-lang-key="headersAndDRM">Cabeceras y DRM</h6>
+                     <div class="multi-edit-field">
+                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="multiEditEnableUserAgent"><label for="multiEditEnableUserAgent" data-lang-key="setUserAgentLabel">Establecer User-Agent (VLC)</label></div>
+                        <textarea class="form-control form-control-sm" id="multiEditUserAgentInput" rows="2" placeholder="User-Agent para #EXTVLCOPT..." disabled data-lang-key="userAgentPlaceholder" data-lang-attr="placeholder"></textarea>
+                    </div>
+                     <div class="multi-edit-field">
+                        <div class="form-check form-switch"><input class="form-check-input" type="checkbox" id="multiEditEnableStreamHeaders"><label for="multiEditEnableStreamHeaders" data-lang-key="setStreamHeadersLabel">Añadir/Sobrescribir Cabeceras de Stream (Kodi)</label></div>
+                        <textarea class="form-control form-control-sm" id="multiEditStreamHeadersInput" rows="3" placeholder="key1=value1|key2=value2..." disabled data-lang-key="streamHeadersPlaceholder" data-lang-attr="placeholder"></textarea>
+                        <select id="multiEditStreamHeadersMode" class="form-select form-select-sm mt-1" disabled><option value="append" data-lang-key="appendHeadersOption">Añadir/Actualizar Cabeceras</option><option value="replace" data-lang-key="replaceHeadersOption">Reemplazar Todas las Cabeceras</option></select>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                    <button type="button" class="btn-control primary" id="applyMultiEditBtn"><i class="fas fa-check-circle me-1"></i><span data-lang-key="applyChangesButton">Aplicar Cambios</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="loading-overlay"> <div class="loader"></div> </div>
+    <div id="notification"></div>
+
+    <div class="modal fade" id="saveM3UModal" tabindex="-1" aria-labelledby="saveM3UModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="saveM3UModalLabel" data-lang-key="saveM3UModalTitle">Guardar Lista M3U Actual</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-secondary mb-3" data-lang-key="saveM3UModalDescription">Introduce un nombre para guardar la lista M3U cargada actualmente en la base de datos local de la extensión.</p>
+                    <div class="mb-3">
+                        <label for="saveM3UNameInput" class="form-label" data-lang-key="listNameLabel">Nombre de la Lista:</label>
+                        <input type="text" class="form-control" id="saveM3UNameInput" placeholder="Ej: MiListaFavorita_TV" data-lang-key="listNamePlaceholder" data-lang-attr="placeholder">
+                    </div>
+                    <small class="form-text text-secondary">Si ya existe una lista con este nombre, se te preguntará si deseas reemplazarla.</small>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                    <button type="button" class="btn-control primary" id="confirmSaveM3UBtn" data-lang-key="saveListButton">Guardar Lista</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="daznTokenModal" tabindex="-1" aria-labelledby="daznTokenModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="daznTokenModalLabel" data-lang-key="daznTokenModalTitle">Token de Autenticación DAZN Requerido</h5>
+                </div>
+                <div class="modal-body">
+                    <p class="text-secondary" data-lang-key="daznTokenModalDescription">Para actualizar los canales de DAZN, por favor, introduce tu Bearer Token completo de DAZN.</p>
+                    <p class="text-secondary small" data-lang-key="daznTokenModalHint">Este token se puede obtener de las herramientas de desarrollador de tu navegador al inspeccionar las solicitudes de red mientras DAZN está activo y logueado.</p>
+                    <div class="mb-3">
+                        <label for="daznTokenModalInput" class="form-label" data-lang-key="daznTokenLabel">Token de DAZN (Bearer):</label>
+                        <textarea class="form-control" id="daznTokenModalInput" rows="4" placeholder="Pega aquí tu Bearer token completo..." data-lang-key="daznTokenPlaceholder" data-lang-attr="placeholder"></textarea>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="daznRememberTokenCheck" checked>
+                        <label class="form-check-label" for="daznRememberTokenCheck" data-lang-key="rememberTokenLabel">
+                            Recordar este token (se guardará localmente en los ajustes)
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control" id="cancelDaznTokenBtn" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                    <button type="button" class="btn-control primary" id="submitDaznTokenBtn" data-lang-key="submitTokenButton">Enviar Token</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="loadFromDBModal" tabindex="-1" aria-labelledby="loadFromDBModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="loadFromDBModalLabel" data-lang-key="loadFromDBModalTitle">Listas Guardadas</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <ul class="list-group list-group-flush" id="dbFilesList">
+                        <li class="list-group-item text-secondary text-center" id="dbListPlaceholder" data-lang-key="loadingLists">Cargando listas... </li>
+                    </ul>
+                </div>
+                <div class="modal-footer"> <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="closeButton">Cerrar</button> </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal fade" id="epgModal" tabindex="-1" aria-labelledby="epgModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="epgModalLabel" data-lang-key="epgModalTitle">Guía de Programación (EPG)</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2 mb-3 align-items-center">
+                        <div class="col-md-8"> <input type="text" class="form-control" id="epgUrlInputModal" placeholder="📅 URL del archivo XMLTV EPG" data-lang-key="epgUrlPlaceholder" data-lang-attr="placeholder"> </div>
+                        <div class="col-md-4 d-grid"> <button class="btn-control primary" id="loadEpgBtnModal" data-lang-key="loadEpgButton">Cargar/Actualizar EPG</button> </div>
+                    </div>
+                    <div class="epg-timeline flex-grow-1">
+                        <div class="epg-timeline-header"> <div class="epg-timebar" id="epgTimeBar"></div> </div>
+                        <div class="epg-timeline-body">
+                            <div class="epg-channels" id="epgChannelsList"></div>
+                            <div class="epg-programs-container" id="epgProgramsContainer">
+                                <div class="epg-programs" id="epgPrograms"></div>
+                                <div id="epgCurrentTimeLine" class="epg-current-time-line" style="display:none;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="movistarVODModal" tabindex="-1" aria-labelledby="movistarVODModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="movistarVODModalLabel" data-lang-key="movistarVODModalTitle">Movistar+ VOD/Catchup</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row g-2 mb-3 align-items-center">
+                        <div class="col-md-3">
+                             <label for="movistarVODDateInput" class="form-label" data-lang-key="selectDateLabel">Seleccionar Fecha:</label>
+                             <input type="date" class="form-control form-control-sm" id="movistarVODDateInput">
+                        </div>
+                        <div class="col-md-3 d-flex align-items-end">
+                            <button class="btn-control primary btn-sm w-100" id="loadMovistarVODBtn" data-lang-key="loadEpgDayButton">Cargar EPG Día</button>
+                        </div>
+                        <div class="col-md-6" id="movistarVODModal-filters-container" style="padding-top:1.8rem;">
+                           <input type="text" class="form-control form-control-sm" id="movistarVODModal-search-input" placeholder="Buscar programa..." data-lang-key="searchProgramPlaceholder" data-lang-attr="placeholder">
+                           <select class="form-select form-select-sm" id="movistarVODModal-channel-filter">
+                               <option value="" data-lang-key="allChannelsOption">Todos los canales</option>
+                           </select>
+                           <select class="form-select form-select-sm" id="movistarVODModal-genre-filter">
+                               <option value="" data-lang-key="allGenresOption">Todos los géneros</option>
+                           </select>
+                        </div>
+                    </div>
+                    <div id="movistarVODModal-programs-container" class="flex-grow-1" style="overflow-y: auto;">
+                        <div id="movistarVODModal-programs" class="m3u-grid">
+                        </div>
+                        <p id="movistarVODModal-no-results" class="d-none text-center p-3" data-lang-key="noProgramsFound">No se encontraron programas para la fecha/filtros seleccionados.</p>
+                    </div>
+                    <div id="movistarVODModal-pagination-controls" class="text-center mt-3 py-2" style="display: none; border-top: 1px solid var(--border-color);">
+                        <button class="btn btn-sm btn-outline-secondary me-2" id="movistarVODModal-prev-page">
+                            <i class="fas fa-chevron-left"></i> <span data-lang-key="previousButton">Anterior</span>
+                        </button>
+                        <span id="movistarVODModal-page-info" class="align-middle" style="color: var(--text-secondary); font-size: 0.9rem;"></span>
+                        <button class="btn btn-sm btn-outline-secondary ms-2" id="movistarVODModal-next-page">
+                            <span data-lang-key="nextButton">Siguiente</span> <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade epg-program-modal" id="epgProgramModal" tabindex="-1" aria-labelledby="epgProgramModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="epgProgramModalLabel" data-lang-key="programDetailsTitle">Detalles del Programa</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="epgProgramDetails"></div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control primary" id="playEpgProgramBtn" style="display: none;"><span class="icon-placeholder"></span> <span data-lang-key="playProgramButton">Reproducir</span></button>
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="closeButton">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="movistarVODProgramDetailsModal" tabindex="-1" aria-labelledby="movistarVODProgramDetailsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="movistarVODProgramDetailsModalLabel">Detalles del Programa VOD</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body" id="movistarVODProgramDetailsBody">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control" id="playMovistarVODProgramFromDetailsBtn"><span class="icon-placeholder">▶</span><span data-lang-key="playProgramButton">Reproducir</span></button>
+                    <button type="button" class="btn-control primary" id="addMovistarVODToM3UFromDetailsBtn"><span class="icon-placeholder">➕</span><span data-lang-key="addToListButton">Añadir a Lista M3U</span></button>
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="closeButton">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="xtreamConnectionModal" tabindex="-1" aria-labelledby="xtreamConnectionModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="xtreamConnectionModalLabel" data-lang-key="xtreamModalTitle">Conexión a Servidor Xtream Codes</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-secondary mb-3" data-lang-key="xtreamModalDescription">Introduce los detalles de tu servidor Xtream. La URL M3U se generará automáticamente.</p>
+                    <div class="mb-3">
+                        <label for="xtreamServerNameInput" class="form-label" data-lang-key="xtreamServerNameLabel">Nombre para Guardar (Opcional):</label>
+                        <input type="text" class="form-control form-control-sm" id="xtreamServerNameInput" placeholder="Ej: Mi Servidor Principal">
+                    </div>
+                    <div class="mb-3">
+                        <label for="xtreamHostInput" class="form-label" data-lang-key="xtreamHostLabel">Host del Servidor (ej: http://dominio.com:puerto):</label>
+                        <input type="url" class="form-control form-control-sm" id="xtreamHostInput" placeholder="http://ejemplo.com:8080" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="xtreamUsernameInput" class="form-label" data-lang-key="xtreamUserLabel">Usuario:</label>
+                        <input type="text" class="form-control form-control-sm" id="xtreamUsernameInput" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="xtreamPasswordInput" class="form-label" data-lang-key="xtreamPasswordLabel">Contraseña:</label>
+                        <input type="password" class="form-control form-control-sm" id="xtreamPasswordInput" required>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                             <label for="xtreamOutputTypeSelect" class="form-label" data-lang-key="xtreamOutputTypeLabel">Tipo de Salida Preferido:</label>
+                             <select class="form-select form-select-sm" id="xtreamOutputTypeSelect">
+                                 <option value="m3u_plus" selected data-lang-key="xtreamM3uPlusOption">M3U Plus (Recomendado)</option>
+                                 <option value="ts" data-lang-key="xtreamTsOption">TS</option> <option value="hls" data-lang-key="xtreamHlsOption">HLS (m3u8)</option>
+                             </select>
+                             <small class="form-text text-secondary d-block mt-1" data-lang-key="xtreamOutputHint">Afecta al formato de las URLs de los streams.</small>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label" data-lang-key="xtreamContentToLoadLabel">Contenido a Cargar:</label>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="xtreamLoadLive" checked>
+                                <label class="form-check-label" for="xtreamLoadLive" data-lang-key="xtreamLiveChannels">Canales en Vivo</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="xtreamLoadVod" checked>
+                                <label class="form-check-label" for="xtreamLoadVod" data-lang-key="xtreamVod">VOD (Películas)</label>
+                            </div>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="xtreamLoadSeries" checked>
+                                <label class="form-check-label" for="xtreamLoadSeries" data-lang-key="xtreamSeries">Series</label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="xtreamFetchEpgCheck" checked>
+                                <label class="form-check-label" for="xtreamFetchEpgCheck" data-lang-key="xtreamFetchEpgLabel">Intentar obtener EPG del servidor</label>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                             <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" role="switch" id="xtreamForceGroupSelectionCheck">
+                                <label class="form-check-label" for="xtreamForceGroupSelectionCheck" data-lang-key="xtreamForceGroupSelectionLabel">Forzar selección de grupos</label>
+                                 <small class="form-text text-secondary d-block" data-lang-key="xtreamForceGroupSelectionHint">Marca esto si quieres cambiar tu selección de grupos para este servidor.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <hr class="my-4">
+                    <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xtreamSavedServersLabel">Servidores Guardados</h6>
+                    <div id="savedXtreamServersListContainer" style="max-height: 200px; overflow-y: auto;">
+                        <ul class="list-group list-group-flush" id="savedXtreamServersList">
+                            <li class="list-group-item text-secondary text-center" data-lang-key="xtreamNoSavedServers">No hay servidores guardados.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-between">
+                    <div> <button type="button" class="btn-control btn-sm" id="saveXtreamServerBtn" data-lang-key="xtreamSaveConnectionButton">Guardar Conexión Actual</button> </div>
+                    <div>
+                        <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                        <button type="button" class="btn-control primary" id="connectXtreamServerBtn" data-lang-key="xtreamConnectButton">Conectar y Cargar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="modal fade" id="xtreamGroupSelectionModal" tabindex="-1" aria-labelledby="xtreamGroupSelectionModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="xtreamGroupSelectionModalLabel" data-lang-key="xtreamGroupSelectionTitle">Seleccionar Grupos de Xtream</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p class="text-secondary mb-3" data-lang-key="xtreamGroupSelectionDescription">Selecciona los grupos de cada categoría que deseas cargar en la lista.</p>
+                    <div class="row">
+                        <div class="col-md-4" id="xtreamLiveGroupsCol" style="display: none;">
+                            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xtreamLiveGroupsLabel">Grupos en Vivo</h6>
+                            <div class="btn-group btn-group-sm w-100 mb-2" role="group">
+                                <button type="button" class="btn btn-outline-secondary" id="xtreamSelectAllLive" data-lang-key="selectAll">Todos</button>
+                                <button type="button" class="btn btn-outline-secondary" id="xtreamDeselectAllLive" data-lang-key="deselectAll">Ninguno</button>
+                            </div>
+                            <div id="xtreamLiveGroupList" class="xtream-group-list-container">
+                                <div class="list-group-item text-secondary" data-lang-key="loading">Cargando...</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" id="xtreamVodGroupsCol" style="display: none;">
+                            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xtreamVodGroupsLabel">Grupos VOD</h6>
+                             <div class="btn-group btn-group-sm w-100 mb-2" role="group">
+                                <button type="button" class="btn btn-outline-secondary" id="xtreamSelectAllVod" data-lang-key="selectAll">Todos</button>
+                                <button type="button" class="btn btn-outline-secondary" id="xtreamDeselectAllVod" data-lang-key="deselectAll">Ninguno</button>
+                            </div>
+                            <div id="xtreamVodGroupList" class="xtream-group-list-container">
+                                 <div class="list-group-item text-secondary" data-lang-key="loading">Cargando...</div>
+                            </div>
+                        </div>
+                        <div class="col-md-4" id="xtreamSeriesGroupsCol" style="display: none;">
+                             <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xtreamSeriesGroupsLabel">Grupos Series</h6>
+                              <div class="btn-group btn-group-sm w-100 mb-2" role="group">
+                                <button type="button" class="btn btn-outline-secondary" id="xtreamSelectAllSeries" data-lang-key="selectAll">Todos</button>
+                                <button type="button" class="btn btn-outline-secondary" id="xtreamDeselectAllSeries" data-lang-key="deselectAll">Ninguno</button>
+                            </div>
+                             <div id="xtreamSeriesGroupList" class="xtream-group-list-container">
+                                  <div class="list-group-item text-secondary" data-lang-key="loading">Cargando...</div>
+                             </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                    <button type="button" class="btn-control primary" id="xtreamConfirmGroupSelectionBtn" data-lang-key="loadSelectedButton">Cargar Seleccionados</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="manageXCodecPanelsModal" tabindex="-1" aria-labelledby="manageXCodecPanelsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="manageXCodecPanelsModalLabel" data-lang-key="xcodecPanelsTitle"><span class="icon-placeholder" style="font-style:normal;">⚙️</span> Gestión de Paneles XCodec</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="xcodecEditingPanelIdInput">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xcodecPanelFormLabel">Formulario del Panel</h6>
+                            <div class="mb-2">
+                                <label for="xcodecPanelNameInput" class="form-label form-label-sm" data-lang-key="xcodecPanelNameLabel">Nombre del Panel (Opcional):</label>
+                                <input type="text" class="form-control form-control-sm" id="xcodecPanelNameInput" placeholder="Ej: Mi Panel XCodec">
+                            </div>
+                            <div class="mb-2">
+                                <label for="xcodecPanelServerUrlInput" class="form-label form-label-sm" data-lang-key="xcodecServerUrlLabel">URL del Servidor X-UI/XC:</label>
+                                <input type="url" class="form-control form-control-sm" id="xcodecPanelServerUrlInput" placeholder="http://ejemplo.com:puerto" required>
+                            </div>
+                            <div class="mb-2">
+                                <label for="xcodecPanelApiTokenInput" class="form-label form-label-sm" data-lang-key="xcodecApiTokenLabel">Token API (si es requerido):</label>
+                                <input type="text" class="form-control form-control-sm" id="xcodecPanelApiTokenInput" placeholder="Token API del servidor">
+                            </div>
+                            <div class="btn-group btn-group-sm w-100 mt-2">
+                                <button type="button" class="btn-control" id="xcodecSavePanelBtn"><i class="fas fa-save me-1"></i> <span data-lang-key="xcodecSavePanelButton">Guardar Panel</span></button>
+                                <button type="button" class="btn-control" id="xcodecClearFormBtn"><i class="fas fa-eraser me-1"></i> <span data-lang-key="xcodecClearFormButton">Limpiar</span></button>
+                            </div>
+                        </div>
+                        <div class="col-md-5">
+                            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xcodecSavedPanelsLabel">Paneles Guardados</h6>
+                             <button class="btn btn-sm btn-outline-info w-100 mb-2" id="xcodecImportPresetPanelsBtn"><i class="fas fa-download me-1"></i> <span data-lang-key="xcodecImportPresetButton">Importar Paneles Predefinidos</span></button>
+                            <div id="savedXCodecPanelsListContainer" style="max-height: 200px; overflow-y: auto;">
+                                <ul class="list-group list-group-flush" id="savedXCodecPanelsList">
+                                    <li class="list-group-item text-secondary text-center" data-lang-key="xcodecNoSavedPanels">No hay paneles guardados.</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                     <hr class="my-3">
+                     <div id="xcodecProgressContainer" class="mb-2" style="display: none;">
+                        <div class="progress" style="height: 20px;">
+                            <div id="xcodecProgressBar" class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                        </div>
+                    </div>
+                    <div id="xcodecStatus" class="alert mt-2" role="alert" style="display:none; font-size:0.85rem;"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                    <button type="button" class="btn-control" id="xcodecProcessAllPanelsBtn" title="Procesar todos los paneles guardados y añadir sus streams directamente"><i class="fas fa-tasks me-1"></i> <span data-lang-key="xcodecProcessAllButton">Procesar Todos</span></button>
+                    <button type="button" class="btn-control primary" id="xcodecProcessPanelBtn" title="Procesar el panel cargado en el formulario (puede mostrar previsualización)"><i class="fas fa-cogs me-1"></i> <span data-lang-key="xcodecProcessFormButton">Procesar Panel (Formulario)</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="xcodecPreviewModal" tabindex="-1" aria-labelledby="xcodecPreviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="xcodecPreviewModalLabel" data-lang-key="xcodecPreviewTitle">Previsualización Panel XCodec</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="xcodecPreviewStats" class="alert alert-info alert-sm mb-3" data-lang-key="xcodecPreviewStatsLoading">Cargando estadísticas...</div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xcodecPanelGroupsLabel">Grupos del Panel</h6>
+                            <div id="xcodecPreviewGroupListContainer" style="max-height: 60vh; overflow-y: auto;">
+                                <ul class="list-group list-group-flush" id="xcodecPreviewGroupList">
+                                </ul>
+                            </div>
+                             <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-secondary w-100" id="xcodecPreviewSelectAllGroupsBtn" data-lang-key="xcodecSelectAllGroupsButton">Seleccionar/Deseleccionar Todos los Grupos</button>
+                            </div>
+                        </div>
+                        <div class="col-md-8">
+                            <h6 class="text-secondary small text-uppercase mb-2" data-lang-key="xcodecChannelsInGroupLabel">Canales en Grupo Seleccionado</h6>
+                            <div id="xcodecPreviewChannelListContainer" style="max-height: 60vh; overflow-y: auto;">
+                                <ul class="list-group list-group-flush" id="xcodecPreviewChannelList">
+                                    <li class="list-group-item text-secondary text-center" data-lang-key="xcodecSelectGroupHint">Selecciona un grupo para ver los canales.</li>
+                                </ul>
+                            </div>
+                             <div class="mt-2">
+                                <button class="btn btn-sm btn-outline-secondary w-100" id="xcodecPreviewSelectAllChannelsInGroupBtn" disabled data-lang-key="xcodecSelectAllInGroupButton">Seleccionar/Deseleccionar Todos en Grupo</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                    <button type="button" class="btn-control" id="xcodecAddSelectedBtn" disabled><i class="fas fa-plus-circle me-1"></i> <span data-lang-key="xcodecAddSelectedButton">Añadir Seleccionados</span></button>
+                    <button type="button" class="btn-control primary" id="xcodecAddAllValidBtn" disabled><i class="fas fa-check-double me-1"></i> <span data-lang-key="xcodecAddAllValidButton">Añadir Todos los Válidos</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="modal fade" id="settingsModal" tabindex="-1" aria-labelledby="settingsModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="settingsModalLabel" data-lang-key="settingsTitle"><span class="icon-placeholder"></span>Ajustes del Reproductor</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-3">
+                            <div class="nav flex-column nav-pills settings-tabs" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+                                <button class="nav-link active" id="generalUISettingsTab" data-bs-toggle="pill" data-bs-target="#generalUISettingsPane" type="button" role="tab" aria-controls="generalUISettingsPane" aria-selected="true"><span class="icon-placeholder"></span><span data-lang-key="settingsGeneralUITab">General y UI</span></button>
+                                <button class="nav-link" id="shakaPlayerSettingsTab" data-bs-toggle="pill" data-bs-target="#shakaPlayerSettingsPane" type="button" role="tab" aria-controls="shakaPlayerSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsPlayerTab">Reproductor</span></button>
+                                <button class="nav-link" id="shakaNetworkSettingsTab" data-bs-toggle="pill" data-bs-target="#shakaNetworkSettingsPane" type="button" role="tab" aria-controls="shakaNetworkSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsNetworkTab">Red (Shaka)</span></button>
+                                <button class="nav-link" id="epgSettingsTab" data-bs-toggle="pill" data-bs-target="#epgSettingsPane" type="button" role="tab" aria-controls="epgSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsEpgTab">EPG</span></button>
+                                <button class="nav-link" id="xcodecSettingsTab" data-bs-toggle="pill" data-bs-target="#xcodecSettingsPane" type="button" role="tab" aria-controls="xcodecSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsXCodecTab">XCodec</span></button>
+                                <button class="nav-link" id="barTvSettingsTab" data-bs-toggle="pill" data-bs-target="#barTvSettingsPane" type="button" role="tab" aria-controls="barTvSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsBarTvTab">BarTV</span></button>
+                                <button class="nav-link" id="orangeTvSettingsTab" data-bs-toggle="pill" data-bs-target="#orangeTvSettingsPane" type="button" role="tab" aria-controls="orangeTvSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsOrangeTvTab">OrangeTV</span></button>
+                                <button class="nav-link" id="globalNetworkSettingsTab" data-bs-toggle="pill" data-bs-target="#globalNetworkSettingsPane" type="button" role="tab" aria-controls="globalNetworkSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsGlobalNetworkTab">Red Global</span></button>
+                                <button class="nav-link" id="daznSettingsTab" data-bs-toggle="pill" data-bs-target="#daznSettingsPane" type="button" role="tab" aria-controls="daznSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsDaznTab">DAZN</span></button>
+                                <button class="nav-link" id="movistarSettingsTab" data-bs-toggle="pill" data-bs-target="#movistarSettingsPane" type="button" role="tab" aria-controls="movistarSettingsPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsMovistarTab">Movistar+</span></button>
+                                <button class="nav-link" id="sendM3uToServerTab" data-bs-toggle="pill" data-bs-target="#sendM3uToServerPane" type="button" role="tab" aria-controls="sendM3uToServerPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsSendM3uTab">Enviar M3U</span></button>
+                                <button class="nav-link" id="appDataManagementTab" data-bs-toggle="pill" data-bs-target="#appDataManagementPane" type="button" role="tab" aria-controls="appDataManagementPane" aria-selected="false"><span class="icon-placeholder"></span><span data-lang-key="settingsDataManagementTab">Gestión de Datos</span></button>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="tab-content" id="v-pills-tabContent">
+                                <div class="tab-pane fade show active" id="generalUISettingsPane" role="tabpanel" aria-labelledby="generalUISettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="settingsUIAppearanceTitle">Interfaz de Usuario y Apariencia</h5>
+                                    <div class="row">
+                                        <div class="col-md-4 mb-3">
+                                            <label for="appLanguageSelect" class="form-label" data-lang-key="languageLabel">Idioma (Language):</label>
+                                            <select class="form-select form-select-sm" id="appLanguageSelect">
+                                                <option value="es">Español</option>
+                                                <option value="en">English</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="appThemeSelect" class="form-label" data-lang-key="themeLabel">Tema de Color:</label>
+                                            <select class="form-select form-select-sm" id="appThemeSelect">
+                                                <option value="default-green" data-lang-key="greenTheme">Verde (Predeterminado)</option> <option value="blue" data-lang-key="blueTheme">Azul</option>
+                                                <option value="purple" data-lang-key="purpleTheme">Púrpura</option> <option value="orange" data-lang-key="orangeTheme">Naranja</option>
+                                            </select>
+                                        </div>
+                                        <div class="col-md-4 mb-3">
+                                            <label for="appFontSelect" class="form-label" data-lang-key="fontLabel">Fuente Principal:</label>
+                                            <select class="form-select form-select-sm" id="appFontSelect">
+                                                <option value="system" data-lang-key="systemFont">Sistema (Predeterminada)</option> <option value="sans-serif" data-lang-key="sansSerifFont">Sans-Serif Genérica</option>
+                                                <option value="serif" data-lang-key="serifFont">Serif Genérica</option> <option value="monospace" data-lang-key="monospaceFont">Monospace Genérica</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="channelCardSizeInput" class="form-label"><span data-lang-key="cardSizeLabel">Tamaño de Tarjetas de Canal:</span> <span id="channelCardSizeValue" class="fw-bold">180px</span></label>
+                                        <input type="range" class="form-range" min="100" max="300" step="5" id="channelCardSizeInput" value="180">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="channelsPerPageInput" class="form-label"><span data-lang-key="channelsPerPageLabel">Canales por Página:</span> <span id="channelsPerPageValue" class="fw-bold">48</span></label>
+                                        <input type="range" class="form-range" min="12" max="120" step="4" id="channelsPerPageInput" value="48">
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="autoSaveM3UCheck" checked>
+                                            <label class="form-check-label" for="autoSaveM3UCheck" data-lang-key="storeLastM3ULabel">Almacenar Última Lista M3U (&lt;4MB)</label>
+                                        </div>
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="particlesEnabledCheck" checked>
+                                            <label class="form-check-label" for="particlesEnabledCheck" data-lang-key="backgroundAnimationLabel">Animación de Fondo (Partículas)</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="particleOpacityInput" class="form-label"><span data-lang-key="particleOpacityLabel">Opacidad de Partículas:</span> <span id="particleOpacityValue" class="fw-bold">2%</span></label>
+                                        <input type="range" class="form-range" min="0" max="20" step="1" id="particleOpacityInput" value="2">
+                                    </div>
+                                    <h5 class="settings-group-title" id="cardDisplaySettingsTitle"><span class="icon-placeholder" style="font-family: FontAwesome;"></span><span data-lang-key="cardDisplaySettingsTitle">Visualización en Tarjetas de Canal</span></h5>
+                                    <div class="mb-3">
+                                        <label for="cardLogoAspectRatioSelect" class="form-label" data-lang-key="logoAspectRatioLabel">Ratio de Aspecto del Logo:</label>
+                                        <select class="form-select form-select-sm" id="cardLogoAspectRatioSelect">
+                                            <option value="16/9" data-lang-key="aspectRatio169">16:9 (Panorámico)</option> <option value="4/3" data-lang-key="aspectRatio43">4:3 (Estándar)</option>
+                                            <option value="1/1" data-lang-key="aspectRatio11">1:1 (Cuadrado)</option> <option value="2/1" data-lang-key="aspectRatio21">2:1 (Cinemático)</option>
+                                            <option value="auto" data-lang-key="aspectRatioAuto">Automático (Original del Contenedor)</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="cardShowChannelNumberCheck">
+                                            <label class="form-check-label" for="cardShowChannelNumberCheck" data-lang-key="showChannelNumberLabel">Mostrar Número de Canal</label>
+                                        </div>
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="cardShowGroupCheck" checked>
+                                            <label class="form-check-label" for="cardShowGroupCheck" data-lang-key="showChannelGroupLabel">Mostrar Grupo del Canal</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="cardShowEpgCheck" checked>
+                                            <label class="form-check-label" for="cardShowEpgCheck" data-lang-key="showEpgInfoLabel">Mostrar Información EPG (Ahora/Siguiente)</label>
+                                        </div>
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="cardShowFavButtonCheck" checked>
+                                            <label class="form-check-label" for="cardShowFavButtonCheck" data-lang-key="showFavButtonLabel">Mostrar Botón de Favoritos</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="compactCardViewCheck">
+                                            <label class="form-check-label" for="compactCardViewCheck" data-lang-key="compactCardViewLabel">Vista de tarjetas compacta</label>
+                                        </div>
+                                         <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="enableHoverPreviewCheck" checked>
+                                            <label class="form-check-label" for="enableHoverPreviewCheck" data-lang-key="enableHoverPreviewLabel">Habilitar previsualización al pasar el ratón</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="shakaPlayerSettingsPane" role="tabpanel" aria-labelledby="shakaPlayerSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="shakaPlayerSettingsTitle">Configuración del Reproductor Shaka</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="persistentControlsCheck">
+                                            <label class="form-check-label" for="persistentControlsCheck" data-lang-key="persistentControlsLabel">Controles del Reproductor Siempre Visibles</label>
+                                        </div>
+                                        <div class="col-md-6 mb-3 form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" role="switch" id="persistFiltersCheck" checked>
+                                            <label class="form-check-label" for="persistFiltersCheck" data-lang-key="persistFiltersLabel">Recordar Filtros entre sesiones</label>
+                                        </div>
+                                    </div>
+                                     <div class="mb-3">
+                                        <label for="playerWindowOpacityInput" class="form-label"><span data-lang-key="playerWindowOpacityLabel">Transparencia de la Ventana del Reproductor:</span> <span id="playerWindowOpacityValue" class="fw-bold">100%</span></label>
+                                        <input type="range" class="form-range" min="0.2" max="1" step="0.05" id="playerWindowOpacityInput" value="1">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="playerBufferInput" class="form-label"><span data-lang-key="playerBufferLabel">Buffer del reproductor (segundos):</span> <span id="playerBufferValue" class="fw-bold">30s</span></label>
+                                        <input type="range" class="form-range" min="5" max="180" step="1" id="playerBufferInput" value="30">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="maxVideoHeight" class="form-label" data-lang-key="maxVideoHeightLabel">Altura Máxima de Video Preferida (ABR):</label>
+                                        <select class="form-select form-select-sm" id="maxVideoHeight">
+                                            <option value="0" data-lang-key="noRestrictionOption">Automático (Sin restricción)</option> <option value="2160">4K (2160p)</option>
+                                            <option value="1440">2K (1440p)</option> <option value="1080">Full HD (1080p)</option>
+                                            <option value="720">HD (720p)</option> <option value="480">SD (480p)</option>
+                                            <option value="360">Baja (360p)</option>
+                                        </select>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="preferredAudioLanguageInput" class="form-label" data-lang-key="preferredAudioLabel">Audio Preferido:</label>
+                                            <select class="form-select form-select-sm" id="preferredAudioLanguageInput"></select>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="preferredTextLanguageInput" class="form-label" data-lang-key="preferredSubtitlesLabel">Subtítulos Preferidos:</label>
+                                            <select class="form-select form-select-sm" id="preferredTextLanguageInput"></select>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3 form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="lowLatencyModeCheck" checked>
+                                        <label class="form-check-label" for="lowLatencyModeCheck" data-lang-key="lowLatencyModeLabel">Modo Baja Latencia (Streaming en Vivo)</label>
+                                    </div>
+                                    <div class="mb-3 form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="liveCatchUpModeCheck">
+                                        <label class="form-check-label" for="liveCatchUpModeCheck" data-lang-key="liveCatchUpModeLabel">Sincronización Agresiva en Vivo (Live Catch-up)</label>
+                                    </div>
+                                    <div class="mb-3 form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="abrEnabledCheck" checked>
+                                        <label class="form-check-label" for="abrEnabledCheck" data-lang-key="enableAbrLabel">Habilitar ABR (Adaptación de Bitrate)</label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="abrDefaultBandwidthEstimateInput" class="form-label"><span data-lang-key="abrInitialBandwidthLabel">Ancho de banda inicial ABR (Kbps):</span> <span id="abrDefaultBandwidthEstimateValue" class="fw-bold">1000 Kbps</span></label>
+                                        <input type="range" class="form-range" min="250" max="8000" step="50" id="abrDefaultBandwidthEstimateInput" value="1000">
+                                    </div>
+                                    <div class="mb-3 form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="streamingJumpLargeGapsCheck">
+                                        <label class="form-check-label" for="streamingJumpLargeGapsCheck" data-lang-key="jumpLargeGapsLabel">Saltar Huecos Grandes en Stream (Live)</label>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="shakaDefaultPresentationDelayInput" class="form-label"><span data-lang-key="dashPresentationDelayLabel">Retraso Presentación DASH (segundos):</span> <span id="shakaDefaultPresentationDelayValue">5s</span></label>
+                                        <input type="range" class="form-range" min="1" max="20" step="1" id="shakaDefaultPresentationDelayInput" value="5">
+                                        <small class="form-text text-secondary d-block" data-lang-key="dashPresentationDelayHint">Para streams DASH. Define cuánto detrás del borde "en vivo" comenzará la reproducción.</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="shakaAudioVideoSyncThresholdInput" class="form-label"><span data-lang-key="avSyncThresholdLabel">Umbral Sincronización A/V (segundos):</span> <span id="shakaAudioVideoSyncThresholdValue">0.25s</span></label>
+                                        <input type="range" class="form-range" min="0.05" max="1" step="0.05" id="shakaAudioVideoSyncThresholdInput" value="0.25">
+                                        <small class="form-text text-secondary d-block" data-lang-key="avSyncThresholdHint">Diferencia máxima permitida entre audio y video antes de intentar una corrección.</small>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="shakaNetworkSettingsPane" role="tabpanel" aria-labelledby="shakaNetworkSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="networkRetrySettingsTitle">Configuración de Reintentos de Red (Shaka)</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="manifestRetryMaxAttemptsInput" class="form-label"><span data-lang-key="manifestMaxRetriesLabel">Máx. Reintentos Manifiesto:</span> <span id="manifestRetryMaxAttemptsValue">2</span></label>
+                                            <input type="range" class="form-range" min="0" max="10" step="1" id="manifestRetryMaxAttemptsInput" value="2">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="manifestRetryTimeoutInput" class="form-label"><span data-lang-key="manifestTimeoutLabel">Timeout Manifiesto (ms):</span> <span id="manifestRetryTimeoutValue">15000</span></label>
+                                            <input type="range" class="form-range" min="1000" max="60000" step="1000" id="manifestRetryTimeoutInput" value="15000">
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="segmentRetryMaxAttemptsInput" class="form-label"><span data-lang-key="segmentMaxRetriesLabel">Máx. Reintentos Segmento:</span> <span id="segmentRetryMaxAttemptsValue">2</span></label>
+                                            <input type="range" class="form-range" min="0" max="10" step="1" id="segmentRetryMaxAttemptsInput" value="2">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="segmentRetryTimeoutInput" class="form-label"><span data-lang-key="segmentTimeoutLabel">Timeout Segmento (ms):</span> <span id="segmentRetryTimeoutValue">15000</span></label>
+                                            <input type="range" class="form-range" min="1000" max="60000" step="1000" id="segmentRetryTimeoutInput" value="15000">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="epgSettingsPane" role="tabpanel" aria-labelledby="epgSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="epgSettingsTitle">Guía de Programación (EPG)</h5>
+                                    <div class="mb-3">
+                                        <label for="defaultEpgUrlInput" class="form-label" data-lang-key="defaultEpgUrlLabel">URL EPG XMLTV por Defecto (Modal EPG):</label>
+                                        <input type="text" class="form-control form-control-sm" id="defaultEpgUrlInput" placeholder="URL del archivo XMLTV EPG por defecto">
+                                    </div>
+                                    <div class="mb-3 form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="enableEpgNameMatchingCheck">
+                                        <label class="form-check-label" for="enableEpgNameMatchingCheck" data-lang-key="enableEpgNameMatchingLabel">Habilitar Coincidencia EPG (XMLTV) por Nombre</label>
+                                        <small class="form-text text-secondary d-block" data-lang-key="epgNameMatchingHint">Si tvg-id falla, intenta por nombre (menos preciso).</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="epgNameMatchThreshold" class="form-label"><span data-lang-key="epgNameMatchThresholdLabel">Umbral Similitud Nombre EPG (XMLTV):</span> <span id="epgNameMatchThresholdValue" class="fw-bold">80%</span></label>
+                                        <input type="range" class="form-range" min="50" max="95" step="1" id="epgNameMatchThreshold" value="80">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="epgDensityInput" class="form-label"><span data-lang-key="epgDensityLabel">Densidad Visual de la Guía EPG:</span> <span id="epgDensityValue" class="fw-bold">200px/h</span></label>
+                                        <input type="range" class="form-range" min="100" max="400" step="10" id="epgDensityInput" value="200">
+                                        <small class="form-text text-secondary d-block" data-lang-key="epgDensityHint">Píxeles por hora en la línea de tiempo. Más alto = más ancho, más detalle. Más bajo = más compacto.</small>
+                                    </div>
+                                     <div class="mb-3 form-check form-switch">
+                                        <input class="form-check-input" type="checkbox" role="switch" id="useMovistarVodAsEpgCheck">
+                                        <label class="form-check-label" for="useMovistarVodAsEpgCheck" data-lang-key="useMovistarVodAsEpgLabel">Usar datos VOD de Movistar+ como EPG (experimental)</label>
+                                        <small class="form-text text-secondary d-block" data-lang-key="useMovistarVodAsEpgHint">Integra la EPG del día actual de Movistar VOD para los canales de Movistar en tu lista.</small>
+                                    </div>
+                                    <div class="mb-3 text-center">
+                                        <button class="btn-control btn-sm primary" id="forceEpgRematchBtn" title="Vuelve a procesar las coincidencias EPG con los ajustes actuales">
+                                            <span class="icon-placeholder"></span> <span data-lang-key="rematchEpgNowButton">Re-emparejar EPG Ahora</span>
+                                        </button>
+                                        <p class="form-text text-secondary mt-1 mb-0" data-lang-key="rematchEpgHint">Necesita una lista M3U y un EPG cargados.</p>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="xcodecSettingsPane" role="tabpanel" aria-labelledby="xcodecSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="xcodecSettingsTitle">Configuración de Paneles XCodec</h5>
+                                    <div class="mb-3">
+                                        <label for="xcodecCorsProxyUrlInput" class="form-label" data-lang-key="corsProxyUrlLabel">URL del Proxy CORS (Opcional):</label>
+                                        <input type="url" class="form-control form-control-sm" id="xcodecCorsProxyUrlInput" placeholder="https://tu-proxy-cors.example.com/?url=">
+                                        <small class="form-text text-secondary" data-lang-key="corsProxyUrlHint">Introduce la URL de un proxy CORS si los paneles XCodec tienen problemas de CORS. La URL del panel se añadirá al final (ej: `proxy.com/?url=http://panel.com`). Déjalo vacío para llamadas directas.</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="xcodecIgnorePanelsOverStreamsInput" class="form-label" data-lang-key="ignorePanelsOverStreamsLabel">Ignorar Paneles con más de X Streams (0 para deshabilitar):</label>
+                                        <input type="number" class="form-control form-control-sm" id="xcodecIgnorePanelsOverStreamsInput" min="0" step="100" value="0">
+                                        <small class="form-text text-secondary" data-lang-key="ignorePanelsOverStreamsHint">Si un panel tiene más streams que este valor, no se procesará al añadir directamente (no afecta a la previsualización).</small>
+                                    </div>
+                                     <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="xcodecDefaultBatchSizeInput" class="form-label" data-lang-key="batchSizeLabel">Tamaño de Lote (Batch) para Configs:</label>
+                                            <input type="number" class="form-control form-control-sm" id="xcodecDefaultBatchSizeInput" min="1" max="50" step="1" value="15">
+                                            <small class="form-text text-secondary" data-lang-key="batchSizeHint">Número de configuraciones de stream a pedir simultáneamente.</small>
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="xcodecDefaultTimeoutInput" class="form-label" data-lang-key="apiTimeoutLabel">Timeout por Petición API (ms):</label>
+                                            <input type="number" class="form-control form-control-sm" id="xcodecDefaultTimeoutInput" min="1000" max="30000" step="1000" value="8000">
+                                            <small class="form-text text-secondary" data-lang-key="apiTimeoutHint">Tiempo máximo de espera para cada llamada a la API del panel.</small>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="barTvSettingsPane" role="tabpanel" aria-labelledby="barTvSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="barTvCredentialsTitle">Credenciales de BarTV</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="barTvEmailInput" class="form-label" data-lang-key="emailLabel">Email:</label>
+                                            <input type="email" class="form-control form-control-sm" id="barTvEmailInput" placeholder="tu_email@ejemplo.com">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="barTvPasswordInput" class="form-label" data-lang-key="passwordLabel">Contraseña:</label>
+                                            <input type="password" class="form-control form-control-sm" id="barTvPasswordInput">
+                                        </div>
+                                    </div>
+                                    <p class="form-text text-secondary" data-lang-key="barTvCredentialsHint">Introduce tus credenciales de BarTV para poder cargar los canales.</p>
+                                </div>
+                                <div class="tab-pane fade" id="orangeTvSettingsPane" role="tabpanel" aria-labelledby="orangeTvSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="orangeTvCredentialsTitle">Credenciales de OrangeTV</h5>
+                                    <div class="row">
+                                        <div class="col-md-6 mb-3">
+                                            <label for="orangeTvUsernameInput" class="form-label" data-lang-key="userLabel">Usuario:</label>
+                                            <input type="text" class="form-control form-control-sm" id="orangeTvUsernameInput">
+                                        </div>
+                                        <div class="col-md-6 mb-3">
+                                            <label for="orangeTvPasswordInput" class="form-label" data-lang-key="passwordLabel">Contraseña:</label>
+                                            <input type="password" class="form-control form-control-sm" id="orangeTvPasswordInput">
+                                        </div>
+                                    </div>
+                                    <h5 class="settings-group-title" data-lang-key="orangeTvGroupSelectionTitle">Selección de Grupos de Canales OrangeTV</h5>
+                                    <div id="orangeTvGroupSelectionContainer" class="row row-cols-2 row-cols-sm-3 row-cols-md-3 g-2 mb-3" style="font-size: 0.85rem;">
+                                    </div>
+                                    <p class="form-text text-secondary" data-lang-key="orangeTvGroupSelectionHint">Si no se selecciona ningún grupo, se incluirán todos los grupos disponibles al cargar canales de OrangeTV.</p>
+                                </div>
+                                <div class="tab-pane fade" id="globalNetworkSettingsPane" role="tabpanel" aria-labelledby="globalNetworkSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="globalNetworkSettingsTitle">Configuración Global de Red</h5>
+                                    <div class="mb-3">
+                                        <label for="globalUserAgentInput" class="form-label" data-lang-key="globalUserAgentLabel">User-Agent Global (Opcional):</label>
+                                        <input type="text" class="form-control form-control-sm" id="globalUserAgentInput" placeholder="Ej: Mozilla/5.0 ...">
+                                        <small class="form-text text-secondary" data-lang-key="globalUserAgentHint">Aplicable si el canal no define uno propio vía KODIPROP, EXTVLCOPT o EXTHTTP.</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="globalReferrerInput" class="form-label" data-lang-key="globalReferrerLabel">Referrer Global (Opcional):</label>
+                                        <input type="text" class="form-control form-control-sm" id="globalReferrerInput" placeholder="Ej: https://sitio.com/">
+                                        <small class="form-text text-secondary" data-lang-key="globalReferrerHint">Aplicable si el canal no define uno propio.</small>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="additionalGlobalHeadersInput" class="form-label" data-lang-key="additionalGlobalHeadersLabel">Cabeceras Adicionales Globales (JSON):</label>
+                                        <textarea class="form-control form-control-sm" id="additionalGlobalHeadersInput" rows="2" placeholder='Ej: { "X-Custom": "valor" }'></textarea>
+                                        <small class="form-text text-secondary" data-lang-key="additionalGlobalHeadersHint">Se fusionarán con cabeceras del canal (canal tiene precedencia).</small>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="daznSettingsPane" role="tabpanel" aria-labelledby="daznSettingsTab">
+                                     <h5 class="settings-group-title" data-lang-key="daznSettingsTitle">Configuración de DAZN</h5>
+                                    <div class="mb-3">
+                                        <label for="daznAuthTokenSettingsInput" class="form-label" data-lang-key="daznAuthTokenLabel">Token de Autenticación DAZN:</label>
+                                        <textarea class="form-control form-control-sm" id="daznAuthTokenSettingsInput" rows="3" placeholder="Introduce tu Bearer token completo de DAZN aquí..."></textarea>
+                                        <small class="form-text text-secondary" data-lang-key="daznAuthTokenHint">Este token se usará para obtener y actualizar los canales de DAZN en tu lista M3U. Se guarda de forma segura.</small>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="movistarSettingsPane" role="tabpanel" aria-labelledby="movistarSettingsTab">
+                                    <h5 class="settings-group-title" data-lang-key="movistarManagementTitle">Gestión de Movistar+</h5>
+                                     <div class="alert alert-info alert-sm" role="alert" style="font-size:0.85rem;">
+                                        <i class="fas fa-info-circle me-2"></i>
+                                        <span data-lang-key="movistarManagementDescription">Esta sección permite gestionar la autenticación y los tokens para Movistar+.</span>
+                                    </div>
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title"><i class="fas fa-user-circle me-1"></i><span data-lang-key="movistarLoginTitle">Iniciar Sesión / Obtener Tokens</span></h6>
+                                            <div class="mb-2">
+                                                <label for="movistarUsernameSettingsInput" class="form-label form-label-sm" data-lang-key="emailLabel">Usuario (Email):</label>
+                                                <input type="email" class="form-control form-control-sm" id="movistarUsernameSettingsInput" placeholder="tuemail@ejemplo.com">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="movistarPasswordSettingsInput" class="form-label form-label-sm" data-lang-key="passwordLabel">Contraseña:</label>
+                                                <input type="password" class="form-control form-control-sm" id="movistarPasswordSettingsInput">
+                                            </div>
+                                            <button class="btn btn-primary btn-sm w-100" id="movistarLoginBtnSettings">
+                                                <i class="fas fa-key"></i> <span data-lang-key="movistarLoginButton">Iniciar Sesión y Obtener Tokens</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title"><i class="fas fa-database me-1"></i><span data-lang-key="movistarSavedLongTokensTitle">Tokens de Sesión Larga Guardados</span></h6>
+                                            <div id="movistarLongTokensListContainerSettings" class="table-responsive mb-2" style="max-height: 200px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md);">
+                                                <table class="table table-sm table-striped table-hover" style="font-size: 0.8rem;">
+                                                    <thead><tr>
+                                                        <th data-lang-key="movistarTokenIdHeader">ID</th>
+                                                        <th data-lang-key="movistarAccountHeader">Cuenta</th>
+                                                        <th data-lang-key="movistarDeviceIdHeader">Device ID</th>
+                                                        <th data-lang-key="movistarExpiresHeader">Expira</th>
+                                                        <th data-lang-key="movistarStatusHeader">Estado</th>
+                                                        <th data-lang-key="movistarActionHeader">Acción</th>
+                                                    </tr></thead>
+                                                    <tbody id="movistarLongTokensTableBodySettings">
+                                                        <tr><td colspan="6" class="text-center p-3" data-lang-key="movistarLoading">Cargando...</td></tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="btn-group btn-group-sm mb-2 w-100" role="group">
+                                                <button type="button" class="btn btn-outline-info" id="movistarValidateAllBtnSettings" title="Validar todos los tokens y refrescar si es necesario"><i class="fas fa-check-double"></i> <span data-lang-key="movistarValidateAllButton">Validar Todos</span></button>
+                                                <button type="button" class="btn btn-outline-warning" id="movistarDeleteExpiredBtnSettings" title="Eliminar tokens expirados"><i class="fas fa-calendar-times"></i> <span data-lang-key="movistarDeleteExpiredButton">Elim. Expirados</span></button>
+                                            </div>
+                                            <div class="input-group input-group-sm mb-1">
+                                                <span class="input-group-text" style="font-size:0.75rem;" data-lang-key="movistarAddJwtLabel">Añadir JWT:</span>
+                                                <textarea class="form-control" id="movistarAddManualTokenJwtInputSettings" rows="2" placeholder="Pega aquí el token JWT largo (eyJ...)"></textarea>
+                                            </div>
+                                            <div class="input-group input-group-sm mb-2">
+                                                <span class="input-group-text" style="font-size:0.75rem;" data-lang-key="movistarDeviceIdLabel">Device ID:</span>
+                                                <input type="text" class="form-control" id="movistarAddManualTokenDeviceIdInputSettings" placeholder="Opcional: WP_OTT-xxxx...">
+                                                <button class="btn btn-outline-success" type="button" id="movistarAddManualTokenBtnSettings" title="Añadir Token Manualmente"><i class="fas fa-plus-circle"></i></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div id="movistarDeviceManagementSectionSettings" class="card mb-3" style="display: none;">
+                                        <div class="card-body">
+                                            <h6 class="card-title"><i class="fas fa-mobile-alt me-1"></i><span data-lang-key="movistarDeviceManagementTitle">Gestión de Dispositivos para Token:</span> <span id="selectedLongTokenIdDisplaySettings" class="fw-normal text-muted" style="font-size:0.8em;"></span></h6>
+                                            <div id="movistarDevicesListForSettings" class="list-group list-group-flush mb-2" style="max-height: 150px; overflow-y: auto; border: 1px solid var(--border-color); border-radius: var(--radius-md); font-size:0.8rem;">
+                                                <div class="list-group-item text-muted text-center" data-lang-key="movistarLoadDevicesHint">Carga los dispositivos para el token seleccionado arriba.</div>
+                                            </div>
+                                            <div class="btn-group btn-group-sm w-100" role="group">
+                                                <button type="button" class="btn btn-outline-primary" id="movistarLoadDevicesForSettingsBtn" disabled><i class="fas fa-list-ul"></i> <span data-lang-key="movistarLoadDevicesButton">Cargar Dispositivos</span></button>
+                                                <button type="button" class="btn btn-outline-success" id="movistarAssociateDeviceForSettingsBtn" disabled><i class="fas fa-link"></i> <span data-lang-key="movistarAssociateDeviceButton">Asociar Seleccionado</span></button>
+                                                <button type="button" class="btn btn-outline-warning" id="movistarRegisterNewDeviceForSettingsBtn" disabled><i class="fas fa-plus-circle"></i> <span data-lang-key="movistarRegisterNewDeviceButton">Registrar Nuevo</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title"><i class="fas fa-ticket-alt me-1"></i><span data-lang-key="movistarCurrentCdnTokenTitle">Token Corto (CDN) Actual</span></h6>
+                                            <div class="mb-2">
+                                                <label for="movistarCdnTokenDisplaySettings" class="form-label form-label-sm" data-lang-key="movistarCdnTokenLabel">Token CDN (X-TCDN-Token):</label>
+                                                <textarea class="form-control form-control-sm" id="movistarCdnTokenDisplaySettings" rows="3" readonly placeholder="No disponible"></textarea>
+                                                <small id="movistarCdnTokenExpirySettings" class="form-text text-muted" data-lang-key="movistarCdnExpiresLabel">Expira: -</small>
+                                            </div>
+                                            <div class="btn-group btn-group-sm w-100" role="group">
+                                                <button class="btn btn-info" id="movistarRefreshCdnBtnSettings" title="Obtener/Refrescar Token CDN usando token largo válido"><i class="fas fa-sync-alt"></i> <span data-lang-key="movistarRefreshCdnButton">Refrescar Token CDN</span></button>
+                                                <button class="btn btn-secondary" id="movistarCopyCdnBtnSettings" disabled title="Copiar Token CDN al portapapeles"><i class="fas fa-copy"></i> <span data-lang-key="movistarCopyCdnButton">Copiar CDN</span></button>
+                                                <button class="btn btn-success" id="movistarApplyCdnToChannelsBtnSettings" disabled title="Aplicar Token CDN a URLs Movistar en la lista actual"><i class="fas fa-check"></i> <span data-lang-key="movistarApplyToChannelsButton">Aplicar a Canales</span></button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="card mb-3">
+                                        <div class="card-body">
+                                            <h6 class="card-title"><i class="fas fa-hdd me-1"></i><span data-lang-key="movistarVodCacheManagementTitle">Gestión de Caché VOD Movistar+</span></h6>
+                                            <p class="card-text small text-secondary">
+                                                <span data-lang-key="movistarVodCacheSavedDaysLabel">Días de datos VOD guardados:</span> <strong id="movistarVodCacheCurrentDaysSpan" class="text-info">-</strong><br>
+                                                <span data-lang-key="movistarVodCacheEstimatedSizeLabel">Tamaño estimado de la caché:</span> <strong id="movistarVodCacheSizeSpan" class="text-info">-</strong>
+                                            </p>
+                                            <div class="mb-3">
+                                                <label for="movistarVodCacheDaysToKeepInput" class="form-label form-label-sm" data-lang-key="movistarVodCacheDaysToKeepLabel">Días a mantener en caché (1-90):</label>
+                                                <input type="number" class="form-control form-control-sm" id="movistarVodCacheDaysToKeepInput" min="1" max="90" step="1" value="15">
+                                            </div>
+                                             <button class="btn btn-danger btn-sm w-100" id="clearMovistarVodCacheBtnSettings">
+                                                <i class="fas fa-broom"></i> <span data-lang-key="movistarClearVodCacheButton">Limpiar Caché VOD Movistar+ Ahora</span>
+                                            </button>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="mt-3">
+                                        <label for="movistarLogAreaSettings" class="form-label form-label-sm" data-lang-key="movistarLogLabel">Registro de Acciones:</label>
+                                        <textarea class="form-control form-control-sm" id="movistarLogAreaSettings" rows="5" readonly style="font-size: 0.75rem; background-color: var(--bg-element);"></textarea>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="sendM3uToServerPane" role="tabpanel" aria-labelledby="sendM3uToServerTab">
+                                    <div class="mb-4">
+                                        <h5 class="settings-group-title" data-lang-key="sendM3uToServerTitle">Enviar Lista M3U a Servidor</h5>
+                                        <div class="mb-3">
+                                            <label for="m3uUploadServerUrlInput" class="form-label" data-lang-key="phpServerUrlLabel">URL del Servidor PHP:</label>
+                                            <input type="url" class="form-control form-control-sm" id="m3uUploadServerUrlInput" placeholder="https://tuservidor.com/ruta/receive_m3u.php">
+                                            <small class="form-text text-secondary" data-lang-key="phpServerUrlHint">Introduce la URL completa del script PHP en tu servidor que recibirá el archivo M3U.</small>
+                                        </div>
+                                        <div class="d-grid">
+                                            <button class="btn-control btn-sm primary" id="sendM3UToServerBtn">
+                                                <span class="icon-placeholder"></span> <span data-lang-key="sendM3uToServerButton">Enviar Lista M3U Cargada Ahora</span>
+                                            </button>
+                                        </div>
+                                        <small class="d-block mt-1 form-text text-secondary" data-lang-key="sendM3uToServerHint">La lista M3U actualmente cargada en el reproductor se enviará al servidor especificado.</small>
+                                    </div>
+                                    <hr>
+                                    <div>
+                                        <h5 class="settings-group-title" data-lang-key="phpScriptGeneratorTitle">Generador de Script PHP (receive_m3u.php)</h5>
+                                        <p class="text-secondary small" data-lang-key="phpScriptGeneratorHint">Usa este generador para crear un script PHP personalizado para tu servidor. Configura las opciones y luego copia el código generado.</p>
+                                        
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h6 data-lang-key="securityOptions">Opciones de Seguridad</h6>
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="phpSecretKeyCheck">
+                                                    <label class="form-check-label" for="phpSecretKeyCheck" data-lang-key="requireSecretKeyLabel">Requerir clave secreta</label>
+                                                </div>
+                                                <div class="input-group input-group-sm mb-3">
+                                                    <span class="input-group-text" data-lang-key="keyLabel">Clave</span>
+                                                    <input type="text" class="form-control" id="phpSecretKey" placeholder="TuClaveSuperSecreta123">
+                                                </div>
+                                                <div class="form-check form-switch mb-3">
+                                                    <input class="form-check-input" type="checkbox" id="phpRestrictToExtensionIdCheck" checked>
+                                                    <label class="form-check-label" for="phpRestrictToExtensionIdCheck" data-lang-key="restrictToExtensionIdLabel">Restringir a esta ID de Extensión</label>
+                                                </div>
+
+                                                <h6 data-lang-key="fileOptions">Opciones de Archivo</h6>
+                                                <div class="mb-3">
+                                                    <label for="phpSavePath" class="form-label" data-lang-key="savePathLabel">Ruta de guardado en servidor</label>
+                                                    <input type="text" class="form-control form-control-sm" id="phpSavePath" placeholder="Ej: /home/usuario/public_html/listas/">
+                                                    <small class="text-secondary" data-lang-key="savePathHint">Ruta absoluta. Si se deja vacía, se guarda en el mismo directorio que el script.</small>
+                                                </div>
+                                                <div class="mb-2">
+                                                    <label class="form-label" data-lang-key="filenameLabel">Nombre del archivo:</label>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="phpFilenameMode" id="phpFilenameOriginal" value="original" checked>
+                                                        <label class="form-check-label" for="phpFilenameOriginal" data-lang-key="keepOriginalFilenameLabel">Mantener nombre original (sanitizado)</label>
+                                                    </div>
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" name="phpFilenameMode" id="phpFilenameFixed" value="fixed">
+                                                        <label class="form-check-label" for="phpFilenameFixed" data-lang-key="useFixedFilenameLabel">Usar nombre fijo:</label>
+                                                    </div>
+                                                    <input type="text" class="form-control form-control-sm mt-1" id="phpFixedFilename" placeholder="mi_lista_fija.m3u">
+                                                </div>
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="phpAddTimestamp">
+                                                    <label class="form-check-label" for="phpAddTimestamp" data-lang-key="addTimestampLabel">Añadir fecha/hora al nombre del archivo</label>
+                                                </div>
+                                                <div class="form-check form-switch mb-2">
+                                                    <input class="form-check-input" type="checkbox" id="phpOverwrite" checked>
+                                                    <label class="form-check-label" for="phpOverwrite" data-lang-key="overwriteLabel">Sobrescribir si el archivo ya existe</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-6">
+                                                <h6 data-lang-key="generatedScriptLabel">Script Generado</h6>
+                                                <textarea id="generatedPhpCode" class="form-control" rows="20" readonly>Configura las opciones y pulsa "Generar Script"...</textarea>
+                                                <div class="d-flex gap-2 mt-2">
+                                                    <button class="btn-control btn-sm flex-grow-1" id="generatePhpScriptBtn" data-lang-key="generateScriptButton">Generar Script</button>
+                                                    <button class="btn-control btn-sm flex-grow-1" id="copyPhpScriptBtn" data-lang-key="copyScriptButton">Copiar Script</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="tab-pane fade" id="appDataManagementPane" role="tabpanel" aria-labelledby="appDataManagementTab">
+                                    <h5 class="settings-group-title" data-lang-key="dataManagementTitle">Gestión de Datos de la Aplicación</h5>
+                                    <div class="d-flex gap-2 mb-2">
+                                        <button class="btn-control btn-sm flex-grow-1" id="exportSettingsBtn"><span class="icon-placeholder"></span> <span data-lang-key="exportSettingsButton">Exportar Ajustes</span></button>
+                                        <input type="file" id="importSettingsInput" class="d-none" accept=".json">
+                                        <label for="importSettingsInput" class="btn-control btn-sm flex-grow-1 mb-0" role="button"><span class="icon-placeholder"></span> <span data-lang-key="importSettingsButton">Importar Ajustes</span></label>
+                                    </div>
+                                    <div class="d-grid">
+                                        <button class="btn-control btn-sm btn-danger" id="clearCacheBtn"><span class="icon-placeholder"></span> <span data-lang-key="clearCacheButton">Limpiar Caché y Datos Locales</span></button>
+                                    </div>
+                                    <small class="d-block mt-1 form-text text-secondary" data-lang-key="clearCacheHint">Esto borra: historial, favoritos, listas guardadas, servidores Xtream, paneles XCodec, EPG, token DAZN y tokens Movistar. La página se recargará.</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn-control" data-bs-dismiss="modal" data-lang-key="settingsCancel">Cancelar</button>
+                    <button type="button" class="btn-control primary" id="saveSettingsBtn"><span class="icon-placeholder"></span><span data-lang-key="settingsSaveAndApply">Guardar y Aplicar Ajustes</span></button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="libs/jquery-3.7.0.min.js"></script>
+    <script src="libs/Sortable.min.js"></script>
+    <script src="libs/bootstrap.bundle.min.js"></script>
+    <script src="libs/particles.min.js"></script>
+    <script src="libs/shaka-player.compiled.js"></script>
+    <script src="libs/shaka-player.ui.js"></script>
+    <script src="db_manager.js" defer></script>
+    <script src="settings_manager.js" defer></script>
+    <script src="m3u_utils.js" defer></script>
+    <script src="ui_actions.js" defer></script>
+    <script src="m3u_operations.js" defer></script>
+    <script src="channel_ui.js" defer></script>
+    <script src="player_interaction.js" defer></script>
+    <script src="user_session.js" defer></script>
+    <script src="movistar_vod_ui.js" defer></script>
+    <script src="audio_enhancer.js" defer></script>
+    <script src="shaka_handler.js" defer></script>
+    <script src="epg.js" defer></script>
+    <script src="orange_tv_client.js" defer></script>
+    <script src="xtream_handler.js" defer></script>
+    <script src="xcodec_handler.js" defer></script>
+    <script src="dazn_handler.js" defer></script>
+    <script src="movistar_handler.js" defer></script>
+    <script src="atresplayer_handler.js" defer></script>
+    <script src="bartv_handler.js" defer></script>
+    <script src="m3u_sender.js" defer></script>
+    <script src="php_handler.js" defer></script>
+    <script src="draggable_modals.js" defer></script>
+    <script src="editor_handler.js" defer></script>
+    <script src="player.js" defer></script>
+</body>
+</html>

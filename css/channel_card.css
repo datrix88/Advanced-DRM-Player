@@ -1,0 +1,80 @@
+.channel-card { background-color: var(--bg-element); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 4px 6px -1px var(--shadow-color), 0 2px 4px -2px var(--shadow-color); transition: transform var(--transition-smooth), box-shadow var(--transition-smooth), border-color var(--transition-smooth), background-color var(--transition-fast); cursor: pointer; position: relative; display: flex; flex-direction: column; will-change: transform, box-shadow; }
+.channel-card:hover { transform: translateY(-6px) scale(1.05); box-shadow: 0 12px 22px -6px color-mix(in srgb, var(--accent-primary) 20%, var(--shadow-color)), 0 0 15px 1px color-mix(in srgb, var(--accent-primary) 30%, transparent); border-color: var(--accent-primary); background-color: var(--bg-element-hover); }
+.channel-card:hover .channel-logo:not(.error) { transform: scale(1.05); }
+.channel-card:active { transform: translateY(-2px) scale(1.01); box-shadow: 0 6px 12px -3px var(--shadow-color), 0 0 8px 0px color-mix(in srgb, var(--accent-primary) 20%, transparent); transition: transform 0.08s ease-out, box-shadow 0.08s ease-out; }
+.channel-logo-container { width: 100%; aspect-ratio: var(--card-logo-aspect-ratio, 16/9); background-color: var(--bg-secondary); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+.channel-logo { max-width: 75%; max-height: 75%; object-fit: contain; transition: var(--transition-smooth); z-index: 1; }
+.channel-logo-container::before { content: '\1F4FA'; font-family: sans-serif; font-weight: normal; font-size: 2.5rem; color: var(--text-tertiary); position: absolute; opacity: 0.2; z-index: 0; transition: opacity 0.2s ease-in-out; }
+.channel-logo-container:has(img.channel-logo[src]:not([src=""]):not(.error))::before { opacity: 0; }
+.card-video-preview-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-color: #000; z-index: 2; display: none; }
+.card-video-preview-container video.card-preview-video { width: 100%; height: 100%; object-fit: cover; }
+.channel-card.is-playing-preview .channel-logo-container > img.channel-logo,
+.channel-card.is-playing-preview .channel-logo-container > .epg-icon-placeholder,
+.channel-card.is-playing-preview .channel-logo-container::before { display: none !important; opacity: 0 !important; }
+.channel-card.is-playing-preview .card-video-preview-container { display: block; }
+
+.channel-info { padding: 0.75rem; flex-grow: 1; display: flex; flex-direction: column; }
+.channel-name { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.3rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.channel-number { font-size: 0.7rem; color: var(--text-tertiary); position: absolute; top: 0.5rem; left: 0.5rem; background-color: rgba(var(--rgb-bg-tertiary),0.7); padding: 0.1rem 0.4rem; border-radius: var(--radius-sm); z-index: 3; backdrop-filter: blur(3px); }
+.channel-card:hover .channel-number { color: var(--accent-primary); }
+.channel-group { font-size: 0.7rem; color: var(--text-tertiary); background: rgba(0, 0, 0, 0.2); padding: 0.2rem 0.4rem; border-radius: var(--radius-sm); display: inline-block; margin-top: auto; max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.channel-epg-info { font-size: 0.7rem; color: var(--text-secondary); margin-top: 0.2rem; line-height: 1.3; }
+.epg-current, .epg-next { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 0.1rem; }
+.epg-current { font-weight: 500; opacity: 0.9; display: flex; align-items: center; }
+.epg-current::before { content: "▶"; font-size: 0.8em; color: var(--accent-primary); margin-right: 0.3em; opacity: 0.8; }
+.epg-next { opacity: 0.7; }
+.epg-progress-bar-container { height: 3px; background-color: var(--border-color); border-radius: 2px; margin-top: 4px; overflow: hidden; }
+.epg-progress-bar { height: 100%; background-color: var(--accent-secondary); border-radius: 2px; width: 0%; transition: width 0.5s linear; }
+.favorite-btn { position: absolute; top: 0.5rem; right: 0.5rem; background-color: rgba(30, 41, 59, 0.7); border: 1px solid var(--border-color); border-radius: 50%; width: 30px; height: 30px; font-size: 1rem;  line-height: 1;  color: var(--text-secondary); transition: var(--transition-fast); display: flex; align-items: center; justify-content: center; z-index: 3; backdrop-filter: blur(3px); }
+.favorite-btn::before {  content: "\2606";  font-family: sans-serif; }
+.favorite-btn.favorite::before { content: "\2B50";  color: var(--accent-primary); }
+.favorite-btn:hover { background-color: var(--accent-primary-transparent); color: var(--accent-primary); transform: scale(1.1); border-color: var(--accent-primary); }
+.favorite-btn.favorite { color: var(--accent-primary); background-color: color-mix(in srgb, var(--accent-primary) 20%, transparent); border-color: color-mix(in srgb, var(--accent-primary) 50%, transparent); }
+.favorite-btn.favorite:hover { color: var(--accent-hover); background-color: color-mix(in srgb, var(--accent-hover) 25%, transparent); border-color: var(--accent-hover); }
+
+.channel-card.compact {
+    flex-direction: row;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+}
+.channel-card.compact .channel-logo-container {
+    width: 90px;
+    height: auto;
+    aspect-ratio: 16/9;
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+}
+.channel-card.compact .channel-logo {
+    max-width: 80%;
+    max-height: 80%;
+}
+.channel-card.compact .channel-info {
+    padding: 0;
+    flex: 1;
+    min-width: 0;
+}
+.channel-card.compact .channel-name {
+    margin-bottom: 0.2rem;
+    font-size: 0.85rem;
+}
+.channel-card.compact .channel-epg-info {
+    font-size: 0.65rem;
+    line-height: 1.2;
+}
+.channel-card.compact .epg-current::before {
+    display: none;
+}
+.channel-card.compact .channel-group {
+    display: none;
+}
+.channel-card.compact .favorite-btn {
+    top: 0.3rem;
+    right: 0.3rem;
+    width: 26px;
+    height: 26px;
+    font-size: 0.9rem;
+}
+.channel-card.compact:hover {
+    transform: translateY(-4px) scale(1.03);
+}

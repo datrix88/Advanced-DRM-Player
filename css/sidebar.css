@@ -1,0 +1,8 @@
+.sidebar-header { padding-bottom: 1rem; margin-bottom: 1rem; border-bottom: 1px solid var(--border-color); }
+.sidebar-logo { font-family: var(--font-heading); font-weight: 700; font-size: 1.7rem; color: var(--accent-primary); text-decoration: none; }
+.sidebar-logo:hover { color: var(--accent-hover); }
+#group-filter-sidebar { width: 100%; margin-bottom: 1rem; } /* Keep with sidebar form elements or move to forms.css */
+.group-list-sidebar { list-style: none; padding: 0; margin: 0; }
+.group-list-sidebar .list-group-item { background-color: transparent; color: var(--text-secondary); border: none; padding: 0.6rem 0.5rem; border-radius: var(--radius-sm); cursor: pointer; font-size: 0.9rem; transition: var(--transition-fast); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.group-list-sidebar .list-group-item:hover, .group-list-sidebar .list-group-item.active { background-color: var(--bg-element); color: var(--text-primary); }
+.group-list-sidebar .list-group-item.active { font-weight: 600; color: var(--accent-primary); }

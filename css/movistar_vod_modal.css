@@ -1,0 +1,25 @@
+#movistarVODModal .modal-body { padding: 1rem; display: flex; flex-direction: column; overflow: hidden; }
+#movistarVODModal .form-control { background-color: var(--bg-element); border: 1px solid var(--border-color); color: var(--text-primary); }
+#movistarVODModal-programs { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 1rem; padding-top:1rem; }
+.movistar-vod-card { background-color: var(--bg-element); border-radius: var(--radius-md); overflow: hidden; border: 1px solid var(--border-color); box-shadow: 0 2px 4px var(--shadow-color); cursor: pointer; display:flex; flex-direction:column; }
+.movistar-vod-card:hover { border-color: var(--accent-primary); box-shadow: 0 4px 8px var(--accent-primary-transparent); transform: translateY(-2px); }
+.movistar-vod-card-img-container { width:100%; aspect-ratio: 16/10; background-color:var(--bg-secondary); overflow:hidden; display:flex; align-items:center; justify-content:center;}
+.movistar-vod-card-img-container img { width:100%; height:100%; object-fit:cover;}
+.movistar-vod-card-body { padding: 0.75rem; flex-grow:1; }
+.movistar-vod-card-title { font-size: 0.95rem; font-weight: 600; color: var(--text-primary); margin-bottom: 0.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.movistar-vod-card-channel, .movistar-vod-card-time, .movistar-vod-card-genre { font-size: 0.75rem; color: var(--text-secondary); margin-bottom:0.1rem; }
+#movistarVODModal-filters-container { display:flex; gap:1rem; margin-bottom:1rem; }
+#movistarVODModal-filters-container .form-select, #movistarVODModal-filters-container .form-control {font-size:0.85rem;}
+#movistarVODModal-channel-filter {flex-basis: 30%;}
+#movistarVODModal-genre-filter {flex-basis: 30%;}
+#movistarVODModal-search-input {flex-basis: 40%;}
+#movistarVODModal-no-results { text-align: center; padding: 2rem; color: var(--text-secondary); font-size: 1.1rem; }
+#movistarVODModal-pagination-controls { }
+
+#movistarVODProgramDetailsModal .modal-content { background-color: var(--bg-element); }
+#movistarVODProgramDetailsModal .modal-body { padding: 1.5rem; max-height: 70vh; overflow-y: auto; }
+#movistarVODProgramDetailsModal img { max-width: 100%; height: auto; max-height: 300px; border-radius: var(--radius-sm); margin-bottom: 1rem; border: 1px solid var(--border-color); background-color: var(--bg-secondary); }
+#movistarVODProgramDetailsModal h5 { font-family: var(--font-heading); color: var(--accent-primary); margin-bottom: 1rem; font-size: 1.2rem;}
+#movistarVODProgramDetailsModal p { color: var(--text-secondary); margin-bottom: 0.5rem; font-size: 0.9rem; }
+#movistarVODProgramDetailsModal p strong { color: var(--text-primary); font-weight: 500; }
+#movistarVODProgramDetailsModal .btn-control .icon-placeholder { margin-right: 0.3rem; }

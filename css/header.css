@@ -1,0 +1,39 @@
+.sidebar-toggle-btn { background: none; border: none; color: var(--text-secondary); font-size: 1.5rem; margin-right: 1rem; padding: 0.5rem; cursor: pointer; }
+.sidebar-toggle-btn::before { content: "\2630"; font-family: sans-serif; }
+.sidebar-toggle-btn:hover { color: var(--text-primary); }
+.header-search-bar { position: relative; max-width: 350px; flex-grow: 1; }
+.header-search-input { width: 100%; padding: 0.6rem 1rem 0.6rem 2.8rem; border-radius: var(--radius-md); border: 1px solid var(--border-color); background-color: var(--bg-element); color: var(--text-primary); font-size: 0.9rem; transition: var(--transition-smooth); }
+.header-search-input:focus { outline: none; border-color: var(--accent-primary); background-color: var(--bg-element-hover); box-shadow: 0 0 0 3px var(--accent-primary-transparent); }
+.header-search-icon { position: absolute; left: 1rem; top: 50%; transform: translateY(-50%); color: var(--text-tertiary); font-size: 0.9rem; }
+.header-search-icon::before { content: "\1F50D"; font-family: sans-serif; }
+.header-actions { margin-left: auto; display: flex; align-items: center; gap: 0.5rem; }
+.header-actions .btn-header-action { background-color: var(--bg-element); border: 1px solid var(--border-color); color: var(--text-secondary); padding: 0.5rem 0.8rem; border-radius: var(--radius-md); font-size: 0.85rem; transition: var(--transition-fast); display: inline-flex; align-items: center; gap: 0.4rem; white-space: nowrap; }
+.header-actions .btn-header-action:hover { background-color: var(--bg-element-hover); color: var(--text-primary); border-color: var(--border-color-strong); transform: translateY(-1px); }
+.header-actions .btn-header-action:active { transform: translateY(0px) scale(0.98); }
+.header-actions .btn-header-action .icon-placeholder { font-size: 1em; font-family: sans-serif; line-height: 1; }
+.header-actions .btn-header-action .btn-text { display: none; }
+#openEpgModalBtn .icon-placeholder::before { content: "\1F4C5"; }
+#openSettingsModalBtn .icon-placeholder::before { content: "\2699"; }
+#openXtreamModalBtn .icon-placeholder::before { content: "🚀"; }
+.dropdown-item .icon-placeholder { font-size: 0.9em; width: 1.2em; text-align: center; display: inline-block;}
+.xtream-info-bar {
+    background-color: var(--bg-secondary);
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    font-size: 0.8rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.xtream-info-bar span {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.xtream-info-bar .fas {
+    color: var(--accent-primary);
+    opacity: 0.8;
+}

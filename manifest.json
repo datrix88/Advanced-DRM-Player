@@ -1,0 +1,93 @@
+{
+    "manifest_version": 3,
+    "name": "DRM Player Avanzado",
+    "version": "2",
+    "description": "Reproductor avanzado de M3U/M3U8 con soporte para EPG y DRM (KodiProps), y carga de OrangeTV.",
+    "default_locale": "es",
+    "permissions": [
+        "storage",
+        "declarativeNetRequest",
+        "cookies"
+    ],
+    "host_permissions": [
+        "<all_urls>"
+    ],
+    "background": {
+        "service_worker": "background.js"
+    },
+    "action": {
+        "default_title": "Abrir DRM Player",
+        "default_icon": {
+            "16": "icons/icon16.png",
+            "48": "icons/icon48.png"
+        }
+    },
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "libs/bootstrap.min.css",
+                "libs/controls.css",
+                "libs/jquery-3.7.0.min.js",
+                "libs/bootstrap.bundle.min.js",
+                "libs/particles.min.js",
+                "libs/shaka-player.compiled.js",
+                "libs/shaka-player.ui.js",
+                "libs/Sortable.min.js",
+                "player.js",
+                "ui_actions.js",
+                "m3u_operations.js",
+                "channel_ui.js",
+                "player_interaction.js",
+                "user_session.js",
+                "movistar_vod_ui.js",
+                "epg.js",
+                "orange_tv_client.js",
+                "settings_manager.js",
+                "db_manager.js",
+                "m3u_utils.js",
+                "audio_enhancer.js",
+                "shaka_handler.js",
+                "xtream_handler.js",
+                "xcodec_handler.js",
+                "dazn_handler.js",
+                "movistar_handler.js",
+                "atresplayer_handler.js",
+                "bartv_handler.js",
+                "m3u_sender.js",
+                "php_handler.js",
+                "draggable_modals.js",
+                "editor_handler.js",
+                "_locales/es/messages.json",
+                "_locales/en/messages.json",
+                "css/base.css",
+                "css/layout.css",
+                "css/sidebar.css",
+                "css/header.css",
+                "css/channel_grid.css",
+                "css/channel_card.css",
+                "css/modals_general.css",
+                "css/player_modal.css",
+                "css/epg_modal.css",
+                "css/movistar_vod_modal.css",
+                "css/settings_modal.css",
+                "css/xtream_modal.css",
+                "css/generic_modals.css",
+                "css/components.css",
+                "css/responsive.css",
+                "css/editor.css",
+                "css/eq_panel.css"
+            ],
+            "matches": [
+                "chrome-extension://*/*"
+            ]
+        }
+    ],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; style-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com data:; object-src 'self'; media-src * blob: data:; connect-src * blob: data: https://*.orange.es https://*.dof6.com https://*.atresplayer.com https://*.bartv.es;"
+    }
+}
