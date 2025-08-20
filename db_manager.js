@@ -33,7 +33,7 @@ function openDB() {
     return dbPromise;
 }
 
-async function saveFileToDB(name, content) {
+async function saveFileToDB(name, content, lastUrl) {
     const db = await openDB();
     return new Promise((resolve, reject) => {
         const transaction = db.transaction(['files'], 'readwrite');
@@ -44,7 +44,7 @@ async function saveFileToDB(name, content) {
                 reject(new Error('Operación de guardado cancelada por el usuario.'));
                 return;
             }
-            const putRequest = store.put({ name, content, timestamp: new Date().toISOString(), channelCount: countChannels(content) });
+            const putRequest = store.put({ name, content, list_url: lastUrl, timestamp: new Date().toISOString(), channelCount: countChannels(content) });
             putRequest.onsuccess = () => resolve();
             putRequest.onerror = (event) => reject('Error al guardar archivo en IndexedDB: ' + event.target.error);
         };
@@ -380,4 +380,108 @@ async function getMovistarVodCacheStats() {
         };
         request.onerror = (event) => reject('Error obteniendo estadísticas de caché VOD Movistar: ' + event.target.error);
     });
+}
+
+async function exportDatabase() {
+    try {
+        const db = await openDB();
+        const exportData = {
+            version: 1,
+            timestamp: new Date().toISOString(),
+            dbName: dbName,
+            data: {}
+        };
+
+        // Export all object stores
+        const objectStoreNames = Array.from(db.objectStoreNames);
+        
+        for (const storeName of objectStoreNames) {
+            const transaction = db.transaction([storeName], 'readonly');
+            const store = transaction.objectStore(storeName);
+            const data = await new Promise((resolve, reject) => {
+                const request = store.getAll();
+                request.onsuccess = () => resolve(request.result);
+                request.onerror = (event) => reject('Error exportando ' + storeName + ': ' + event.target.error);
+            });
+            exportData.data[storeName] = data;
+        }
+
+        // Convert to JSON and trigger download
+        const dataStr = JSON.stringify(exportData, null, 2);
+        const blob = new Blob([dataStr], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${dbName}_export_${new Date().toISOString().split('T')[0]}.json`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        return { success: true, message: 'Base de datos exportada correctamente' };
+    } catch (error) {
+        console.error('Error exporting database:', error);
+        return { success: false, message: 'Error al exportar la base de datos: ' + error.message };
+    }
+}
+
+async function importDatabase(file) {
+    try {
+        const fileContent = await new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = (e) => resolve(e.target.result);
+            reader.onerror = () => reject('Error leyendo el archivo');
+            reader.readAsText(file);
+        });
+
+        const importData = JSON.parse(fileContent);
+        
+        // Validate import data structure
+        if (!importData.dbName || !importData.data || typeof importData.data !== 'object') {
+            throw new Error('Formato de archivo inválido');
+        }
+
+        if (importData.dbName !== dbName) {
+            throw new Error(`Este archivo es para la base de datos "${importData.dbName}", pero la actual es "${dbName}"`);
+        }
+
+        // Confirm before importing
+        const confirmMessage = `¿Está seguro que desea importar la base de datos?\n\nEsto reemplazará todos los datos actuales:\n- ${Object.keys(importData.data).join('\n- ')}\n\nFecha de exportación: ${importData.timestamp}`;
+        
+        if (!confirm(confirmMessage)) {
+            return { success: false, message: 'Importación cancelada por el usuario' };
+        }
+
+        const db = await openDB();
+        
+        // Clear existing data and import new data
+        for (const [storeName, storeData] of Object.entries(importData.data)) {
+            if (db.objectStoreNames.contains(storeName)) {
+                const transaction = db.transaction([storeName], 'readwrite');
+                const store = transaction.objectStore(storeName);
+                
+                // Clear existing data
+                await new Promise((resolve, reject) => {
+                    const clearRequest = store.clear();
+                    clearRequest.onsuccess = () => resolve();
+                    clearRequest.onerror = (event) => reject('Error limpiando ' + storeName + ': ' + event.target.error);
+                });
+                
+                // Import new data
+                for (const item of storeData) {
+                    await new Promise((resolve, reject) => {
+                        const addRequest = store.add(item);
+                        addRequest.onsuccess = () => resolve();
+                        addRequest.onerror = (event) => reject('Error importando en ' + storeName + ': ' + event.target.error);
+                    });
+                }
+            }
+        }
+
+        return { success: true, message: 'Base de datos importada correctamente. La página se recargará.' };
+    } catch (error) {
+        console.error('Error importing database:', error);
+        return { success: false, message: 'Error al importar la base de datos: ' + error.message };
+    }
 }

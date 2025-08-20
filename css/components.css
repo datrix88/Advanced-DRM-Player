@@ -13,6 +13,8 @@
 #exportSettingsBtn .icon-placeholder::before { content: "\1F4E4"; }
 #clearCacheBtn .icon-placeholder::before { content: "\1F5D1"; }
 #importSettingsInput + label .icon-placeholder::before { content: "\1F4E5"; }
+#exportDbBtn .icon-placeholder::before { content: "\1F4BE"; }
+#importDbInput + label .icon-placeholder::before { content: "\1F4C1"; }
 #sendM3UToServerBtn .icon-placeholder::before { content: "\1F4E1"; }
 .btn-control:hover:not(:disabled) { background-color: var(--bg-element-hover); border-color: var(--border-color-strong); transform: translateY(-1px); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
 .btn-control:active:not(:disabled) { transform: translateY(0px) scale(0.98); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }

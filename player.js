@@ -81,6 +81,7 @@ async function showLoadFromDBModal() {
     }
     showLoading(true, currentTranslations['loadingLists'] || 'Cargando listas guardadas...');
     try {
+
         const files = typeof getAllFilesFromDB === 'function' ? await getAllFilesFromDB() : [];
         const $list = $('#dbFilesList').empty();
         if (!files || files.length === 0) {
@@ -119,6 +120,9 @@ async function loadFileToPlayer(name) {
     currentGroupOrder = [];
     try {
         const file = typeof getFileFromDB === 'function' ? await getFileFromDB(name) : null;
+        const list_url = file.list_url
+        const name_list = file.name
+        loadUrl(list_url)
         if (!file || !file.content) throw new Error('Lista no encontrada en la base de datos.');
         processM3UContent(file.content, file.name, true);
 
@@ -477,6 +481,11 @@ function bindEvents() {
             showNotification('Introduce una URL válida.', 'info');
         }
     });
+
+    $('#refreshList').on('click', () => {
+        location.reload();
+    });
+
     $('#fileInput').on('change', loadFile);
 
     $('#loadFromDBBtnHeader').on('click', showLoadFromDBModal);
@@ -720,6 +729,8 @@ function bindEvents() {
 
     $('#exportSettingsBtn').on('click', () => { if(typeof exportSettings === 'function') exportSettings(); });
     $('#importSettingsInput').on('change', (event) => { if(typeof importSettings === 'function') importSettings(event); });
+    $('#exportDbBtn').on('click', handleExportDatabase);
+    $('#importDbInput').on('change', handleImportDatabase);
     $('#clearCacheBtn').on('click', clearCacheAndReload);
 
     $('#connectXtreamServerBtn').on('click', () => {
@@ -1536,5 +1547,60 @@ async function handleMovistarTokenStatusButtonClick() {
         showNotification(`Error al actualizar token: ${error.message}`, "error");
     } finally {
         showLoading(false);
+    }
+}
+
+async function handleExportDatabase() {
+    try {
+        showLoading(true, "Exportando base de datos...");
+        
+        if (typeof exportDatabase !== 'function') {
+            throw new Error("exportDatabase no está definido");
+        }
+        
+        const result = await exportDatabase();
+        
+        if (result.success) {
+            showNotification(result.message, 'success');
+        } else {
+            showNotification(result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error en handleExportDatabase:', error);
+        showNotification('Error al exportar la base de datos: ' + error.message, 'error');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function handleImportDatabase(event) {
+    try {
+        const file = event.target.files[0];
+        if (!file) return;
+        
+        showLoading(true, "Importando base de datos...");
+        
+        if (typeof importDatabase !== 'function') {
+            throw new Error("importDatabase no está definido");
+        }
+        
+        const result = await importDatabase(file);
+        
+        if (result.success) {
+            showNotification(result.message, 'success');
+            // Reload the page after successful import
+            setTimeout(() => {
+                window.location.reload();
+            }, 2000);
+        } else {
+            showNotification(result.message, 'error');
+        }
+    } catch (error) {
+        console.error('Error en handleImportDatabase:', error);
+        showNotification('Error al importar la base de datos: ' + error.message, 'error');
+    } finally {
+        showLoading(false);
+        // Clear the file input
+        event.target.value = '';
     }
 }

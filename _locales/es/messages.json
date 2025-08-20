@@ -327,6 +327,8 @@
     "dataManagementTitle": { "message": "Gestión de Datos de la Aplicación" },
     "exportSettingsButton": { "message": "Exportar Ajustes" },
     "importSettingsButton": { "message": "Importar Ajustes" },
+    "exportDbButton": { "message": "Exportar Base de Datos" },
+    "importDbButton": { "message": "Importar Base de Datos" },
     "clearCacheButton": { "message": "Limpiar Caché y Datos Locales" },
     "clearCacheHint": { "message": "Esto borra: historial, favoritos, listas guardadas, servidores Xtream, paneles XCodec, EPG, token DAZN y tokens Movistar. La página se recargará." },
     "settingsSaveAndApply": { "message": "Guardar y Aplicar Ajustes" },

@@ -150,8 +150,9 @@ async function clearCacheAndReload() {
     }
 }
 
-function handleSaveToDB() {
+async function handleSaveToDB() {
     const nameInput = $('#saveM3UNameInput').val();
+    const lastUrl = await getAppConfigValue('lastM3UUrl');
     if (!nameInput || !nameInput.trim()) {
         showNotification('Nombre de lista inválido o vacío. Guardado cancelado.', 'info');
         return;
@@ -162,7 +163,7 @@ function handleSaveToDB() {
 
     showLoading(true, `Guardando "${escapeHtml(finalName)}"...`);
     if (typeof saveFileToDB === 'function') {
-        saveFileToDB(finalName, currentM3UContent)
+        saveFileToDB(finalName, currentM3UContent, lastUrl)
             .then(() => showNotification(`Lista "${escapeHtml(finalName)}" guardada (${typeof countChannels === 'function' ? countChannels(currentM3UContent) : 0} canales).`, 'success'))
             .catch(err => {
                 if (err.message.includes('cancelada')) {
